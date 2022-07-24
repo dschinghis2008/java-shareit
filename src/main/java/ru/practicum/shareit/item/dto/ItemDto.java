@@ -2,12 +2,9 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-
 /**
  * // TODO .
  */
-
 @Data
 public class ItemDto {
     private Integer id;
@@ -21,4 +18,5 @@ public class ItemDto {
     private Integer owner;
 
     private String request;
+
 }
