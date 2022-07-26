@@ -6,11 +6,11 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.Collection;
 
 public interface ItemService {
-    ItemDto add(ItemDto itemDto);
-    ItemDto update(ItemDto itemDto,Integer userId);
-    ItemDto getById(Integer id);
+    Item add(Item itemDto);
+    Item update(Item itemDto,Integer userId);
+    Item getById(Integer id);
 
-    Collection<ItemDto> getAll(Integer userId);
-    Collection<ItemDto> getByNameOrDesc(String text);
+    Collection<Item> getAll(Integer userId);
+    Collection<Item> getByNameOrDesc(String text);
     void delete(Integer itemId,Integer userId);
 }

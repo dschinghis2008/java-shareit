@@ -9,4 +9,6 @@ public interface UserRepository {
     User update(User user,Integer id);
     void delete(Integer id);
     void deleteAll();
+
+    Boolean isPresent(Integer id);
 }

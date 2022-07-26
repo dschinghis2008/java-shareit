@@ -2,22 +2,24 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.UserRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 //@Repository
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class ItemRepositoryInMemory implements ItemRepository {
+
+    @Autowired
+    private UserRepository userRepository;
     private Map<Integer, Item> items = new HashMap<>();
     private Integer itemId = 0;
 
@@ -27,6 +29,12 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
     @Override
     public Item add(Item item) {
+        if(!userRepository.isPresent(item.getOwner())){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        if(item.getAvailable() == null || item.getName().equals("") || item.getDescription() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         item.setId(getItemId());
         items.put(item.getId(), item);
         log.info("добавлена вещь /{}/",item.toString());
@@ -38,13 +46,32 @@ public class ItemRepositoryInMemory implements ItemRepository {
         if (items.get(id) == null || items.get(id).getOwner() != item.getOwner()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        try {
-            items.get(id).setName(item.getName());
-            items.get(id).setDescription(item.getDescription());
-            items.get(id).setAvailable(item.getAvailable());
+        Item itemUpd = items.get(id);
+        if(item.getName() != null){
+            itemUpd.setName(item.getName());
+        }
+        if(item.getDescription() != null){
+            itemUpd.setDescription(item.getDescription());
+        }
+        if(item.getAvailable() != null){
+            itemUpd.setAvailable(item.getAvailable());
+        }
+        /*try {
+            itemUpd.setName(item.getName());
         } catch (NullPointerException e) {
             log.info("field for update not found, itemId={},/{}/", id, item.toString());
         }
+        try{
+            itemUpd.setDescription(item.getDescription());
+        } catch (NullPointerException e) {
+            log.info("field for update not found, itemId={},/{}/", id, item.toString());
+        }
+        try{
+            itemUpd.setAvailable(item.getAvailable());
+        } catch (NullPointerException e) {
+            log.info("field for update not found, itemId={},/{}/", id, item.toString());
+        }*/
+        items.put(id,itemUpd);
         log.info("обновлена вещь /{}/",items.get(id).toString());
         return items.get(id);
     }
@@ -70,10 +97,34 @@ public class ItemRepositoryInMemory implements ItemRepository {
     @Override
     public Collection<Item> getByNameOrDesc(String text) {
         ArrayList<Item> itemList = new ArrayList<>();
+        if(text == null || text.equals("")){
+            return itemList;
+        }
+        String[] split;
+        boolean mismatch;
         for(Item item : items.values()){
-            if(item.getName().substring(0,text.length()-1).toLowerCase().equals(text.toLowerCase())
-            || item.getDescription().substring(0,text.length()-1).toLowerCase().equals(text.toLowerCase())){
-                itemList.add(item);
+            if(!item.getAvailable()){
+                continue;
+            }
+            mismatch = true;
+            split = item.getName().split(" ");
+            for (int i = 0; i < split.length; i++) {
+                if(split[i].length() >= text.length() && split[i].substring(0,text.length()).toLowerCase().equals(text.toLowerCase())){
+                    itemList.add(item);
+                    mismatch = false;
+                    break;
+                }
+            }
+            if(!mismatch){
+                continue;
+            }
+
+            split = item.getDescription().split(" ");
+            for (int i = 0; i < split.length; i++) {
+                if(split[i].length() >= text.length() && split[i].substring(0,text.length()).toLowerCase().equals(text.toLowerCase())){
+                    itemList.add(item);
+                    break;
+                }
             }
         }
         log.info("запрошен поиск вещи по строке /text={}/, найдено {}",text,itemList.size());
@@ -88,4 +139,5 @@ public class ItemRepositoryInMemory implements ItemRepository {
         items.remove(itemId);
         log.info("удалена вещь /id={}/",itemId);
     }
+
 }

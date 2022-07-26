@@ -1,9 +1,11 @@
 package ru.practicum.shareit.item;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
+@Slf4j
 @Service
 public class ItemMapper {
     public ItemDto toItemDto(Item item){
@@ -11,32 +13,32 @@ public class ItemMapper {
         try{
             itemDto.setId(item.getId());
         } catch (NullPointerException e){
-            System.out.println("id is null");
+            log.info("id is null");
         }
         try{
             itemDto.setName(item.getName());
         } catch (NullPointerException e){
-            System.out.println("name is null");
+            log.info("name is null");
         }
         try{
             itemDto.setDescription(item.getDescription());
         } catch (NullPointerException e){
-            System.out.println("description is null");
+            log.info("description is null");
         }
         try{
             itemDto.setAvailable(item.getAvailable());
         } catch (NullPointerException e){
-            System.out.println("available is null");
+            log.info("available is null");
         }
         try{
             itemDto.setOwner(item.getOwner());
         } catch (NullPointerException e){
-            System.out.println("owner is null");
+            log.info("owner is null");
         }
         try{
             itemDto.setRequest(item.getRequest());
         } catch (NullPointerException e){
-            System.out.println("request is null");
+            log.info("request is null");
         }
 
         return itemDto;
@@ -47,32 +49,32 @@ public class ItemMapper {
         try{
             item.setId(itemDto.getId());
         } catch (NullPointerException e){
-            System.out.println("id is null");
+            log.info("item: id is null");
         }
         try{
             item.setName(itemDto.getName());
         } catch (NullPointerException e){
-            System.out.println("name isnull");
+            log.info("item: name isnull");
         }
         try{
             item.setDescription(itemDto.getDescription());
         } catch (NullPointerException e){
-            System.out.println("description is null");
+            log.info("item: description is null");
         }
         try{
             item.setAvailable(itemDto.getAvailable());
         } catch (NullPointerException e){
-            System.out.println("available is null");
+            log.info("item: available is null");
         }
         try{
             item.setOwner(itemDto.getOwner());
         } catch (NullPointerException e){
-            System.out.println("owner is null");
+            log.info("item: owner is null");
         }
         try{
             item.setRequest(itemDto.getRequest());
         } catch (NullPointerException e){
-            System.out.println("request is null");
+            log.info("item: request is null");
         }
 
         return item;
