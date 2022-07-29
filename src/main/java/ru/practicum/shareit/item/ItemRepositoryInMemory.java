@@ -41,7 +41,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
     @Override
     public Item update(Item item, Integer id) {
-        if (items.get((int)id) == null || items.get((int)id).getOwner() != item.getOwner()) {
+        if (id != null && (items.get((int)id) == null || items.get((int)id).getOwner() != item.getOwner())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
