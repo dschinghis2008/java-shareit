@@ -2,7 +2,6 @@ package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -11,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Component
+@Repository
 public class UserRepositoryInMemory implements UserRepository {
     private final Map<Integer, User> users = new HashMap<>();
     private Integer idUser = 0;
@@ -36,6 +35,7 @@ public class UserRepositoryInMemory implements UserRepository {
     public User add(User user) {
         for (User userTest : users.values()) {
             if (user.getEmail().equals(userTest.getEmail())) {
+                log.info(">>>>conflict>>>> user:{}===userTest:{}", user.toString(), userTest.toString());
                 throw new ResponseStatusException(HttpStatus.CONFLICT);
             }
         }
@@ -92,7 +92,7 @@ public class UserRepositoryInMemory implements UserRepository {
 
     @Override
     public Boolean isPresent(Integer id) {
-        if(users.get(id) == null){
+        if (users.get(id) == null) {
             return false;
         } else {
             return true;

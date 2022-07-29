@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -17,38 +18,43 @@ import java.util.Collection;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
+    private final ItemMapper itemMapper;
 
     @PostMapping
-    public Item add(@RequestBody Item itemDto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public ItemDto add(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
         itemDto.setOwner(userId);
-        try {
-            return itemService.add(itemDto);
-        } catch (NullPointerException e) {
-            //log.info("return null? >>>>>{}",itemDto.toString());
-            return itemDto;
-        }
-
+        Item item = itemMapper.toItem(itemDto);
+        return itemMapper.toDto(itemService.add(item));
     }
 
     @PatchMapping("/{itemId}")
-    public Item update(@RequestBody Item itemDto, @PathVariable Integer itemId
+    public ItemDto update(@RequestBody ItemDto itemDto, @PathVariable Integer itemId
             , @RequestHeader("X-Sharer-User-Id") Integer userId) {
         itemDto.setOwner(userId);
-        return itemService.update(itemDto, itemId);
+        Item item = itemMapper.toItem(itemDto);
+        return itemMapper.toDto(itemService.update(item, itemId));
     }
 
     @GetMapping("/{itemId}")
-    public Item getById(@PathVariable Integer itemId) {
-        return itemService.getById(itemId);
+    public ItemDto getById(@PathVariable Integer itemId) {
+        return itemMapper.toDto(itemService.getById(itemId));
     }
 
     @GetMapping
-    public Collection<Item> getAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.getAll(Math.toIntExact(userId));
+    public Collection<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Integer userId) {
+        ArrayList<ItemDto> listDto = new ArrayList<>();
+        for (Item item : itemService.getAll(userId)) {
+            listDto.add(itemMapper.toDto(item));
+        }
+        return listDto;
     }
 
     @GetMapping("/search")
-    public Collection<Item> getByNameOrDesc(@RequestParam String text) {
-        return itemService.getByNameOrDesc(text);
+    public Collection<ItemDto> getByNameOrDesc(@RequestParam String text) {
+        ArrayList<ItemDto> listDto = new ArrayList<>();
+        for (Item item : itemService.getByNameOrDesc(text)) {
+            listDto.add(itemMapper.toDto(item));
+        }
+        return listDto;
     }
 }

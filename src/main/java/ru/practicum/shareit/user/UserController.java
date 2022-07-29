@@ -1,9 +1,11 @@
 package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -13,26 +15,36 @@ import java.util.Collection;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserServiceImpl userServiceImpl;
+    @Autowired
+    private final UserService userServiceImpl;
+
+    @Autowired
+    private final UserMapper userMapper;
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable Integer id) {
-        return userServiceImpl.getById(id);
+    public UserDto getById(@PathVariable Integer id) {
+        return userMapper.toDto(userServiceImpl.getById(id));
     }
 
     @GetMapping
-    public Collection<User> getAll() {
-        return userServiceImpl.getAll();
+    public Collection<UserDto> getAll() {
+        ArrayList<UserDto> list = new ArrayList<>();
+        for (User user : userServiceImpl.getAll()) {
+            list.add(userMapper.toDto(user));
+        }
+        return list;
     }
 
     @PostMapping
-    public User add(@Valid @RequestBody User user) {
-        return userServiceImpl.add(user);
+    public UserDto add(@Valid @RequestBody UserDto userDto) {
+        User user = userMapper.toUser(userDto);
+        return userMapper.toDto(userServiceImpl.add(user));
     }
 
     @PatchMapping("/{id}")
-    public User update(@RequestBody User user,@PathVariable Integer id) {
-        return userServiceImpl.update(user, id);
+    public UserDto update(@RequestBody UserDto userDto, @PathVariable Integer id) {
+        User user = userMapper.toUser(userDto);
+        return userMapper.toDto(userServiceImpl.update(user, id));
     }
 
     @DeleteMapping("/{id}")

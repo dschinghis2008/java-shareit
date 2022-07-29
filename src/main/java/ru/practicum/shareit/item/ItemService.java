@@ -6,8 +6,8 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.Collection;
 
 public interface ItemService {
-    Item add(Item itemDto);
-    Item update(Item itemDto,Integer userId);
+    Item add(Item item);
+    Item update(Item item,Integer userId);
     Item getById(Integer id);
 
     Collection<Item> getAll(Integer userId);

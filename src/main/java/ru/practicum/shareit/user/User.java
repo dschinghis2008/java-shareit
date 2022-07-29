@@ -2,10 +2,6 @@ package ru.practicum.shareit.user;
 
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-
 /**
  * // TODO .
  */
@@ -13,12 +9,7 @@ import javax.validation.constraints.Pattern;
 public class User {
     private Integer id;
 
-    @NotBlank(message = "name не может быть пустым")
-    @Pattern(regexp = "\\S+", message = "name не может содержать пробелов")
     private String name;
-
-    @NotBlank(message = "email не может быть пустым")
-    @Email(message = "некорректный e-mail")
 
     private String email;
 }
