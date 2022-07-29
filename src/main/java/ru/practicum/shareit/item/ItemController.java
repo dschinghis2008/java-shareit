@@ -28,8 +28,8 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto update(@RequestBody ItemDto itemDto, @PathVariable Integer itemId
-            , @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public ItemDto update(@RequestBody ItemDto itemDto, @PathVariable Integer itemId,
+                          @RequestHeader("X-Sharer-User-Id") Integer userId) {
         itemDto.setOwner(userId);
         Item item = itemMapper.toItem(itemDto);
         return itemMapper.toDto(itemService.update(item, itemId));
