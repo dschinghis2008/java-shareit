@@ -41,9 +41,10 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
     @Override
     public Item update(Item item, Integer id) {
-        if (items.get(id) == null || items.get(id).getOwner() != item.getOwner()) {
+        if (items.get((int)id) == null || items.get((int)id).getOwner() != item.getOwner()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+
         Item itemUpd = items.get(id);
         if (item.getName() != null) {
             itemUpd.setName(item.getName());
@@ -70,7 +71,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
     public Collection<Item> getAll(Integer userId) {
         ArrayList<Item> itemList = new ArrayList<>();
         for (Item item : items.values()) {
-            if (item.getOwner() == userId) {
+            if (item.getOwner() == (int)userId) {
                 itemList.add(item);
             }
         }
@@ -117,7 +118,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
     @Override
     public void delete(Integer itemId, Integer userId) {
-        if (items.get(itemId) == null || items.get(itemId).getOwner() != userId) {
+        if (items.get((int)itemId) == null || items.get((int)itemId).getOwner() != (int)userId) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         items.remove(itemId);
