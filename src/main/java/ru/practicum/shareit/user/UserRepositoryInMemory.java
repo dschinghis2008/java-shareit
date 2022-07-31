@@ -19,6 +19,21 @@ public class UserRepositoryInMemory implements UserRepository {
         return ++idUser;
     }
 
+    private void validateOnUpdate(Integer id) {
+        if (users.get(id) == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private void validateOnEmailConflict(User user) {
+        for (User userTest : users.values()) {
+            if (user.getEmail().equals(userTest.getEmail())) {
+                log.info(">>>>conflict>>>> user:{}===userTest:{}", user.toString(), userTest.toString());
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+        }
+    }
+
     @Override
     public User getById(Integer id) {
         log.info("запрошен пользователь id={}, user=/{}", id, users.get(id).toString());
@@ -33,12 +48,7 @@ public class UserRepositoryInMemory implements UserRepository {
 
     @Override
     public User add(User user) {
-        for (User userTest : users.values()) {
-            if (user.getEmail().equals(userTest.getEmail())) {
-                log.info(">>>>conflict>>>> user:{}===userTest:{}", user.toString(), userTest.toString());
-                throw new ResponseStatusException(HttpStatus.CONFLICT);
-            }
-        }
+        validateOnEmailConflict(user);
         user.setId(getNewId());
         users.put(user.getId(), user);
         log.info("добавлен пользователь id={}", user.getId());
@@ -47,31 +57,16 @@ public class UserRepositoryInMemory implements UserRepository {
 
     @Override
     public User update(User user, Integer id) {
-
-        if (users.get(id) == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        validateOnUpdate(id);
+        if (user.getEmail() != null) {
+            validateOnEmailConflict(user);
+            users.get(id).setEmail(user.getEmail());
         }
 
-        try {
-            if (!user.getEmail().isEmpty() && user.getEmail() != null && !user.getEmail().equals("")) {
-                for (User userTest : users.values()) {
-                    if (user.getEmail().equals(userTest.getEmail())) {
-                        throw new ResponseStatusException(HttpStatus.CONFLICT);
-                    }
-                }
-                users.get(id).setEmail(user.getEmail());
-            }
-        } catch (NullPointerException e) {
-            log.info("email not found");
+        if (user.getName() != null) {
+            users.get(id).setName(user.getName());
         }
 
-        try {
-            if (!user.getName().isEmpty() && user.getName() != null && !user.getName().equals("")) {
-                users.get(id).setName(user.getName());
-            }
-        } catch (NullPointerException e) {
-            log.info("name not found ");
-        }
         log.info("обновлен пользователь id={}, user= /{}", id, users.get(id).toString());
         return users.get(id);
     }

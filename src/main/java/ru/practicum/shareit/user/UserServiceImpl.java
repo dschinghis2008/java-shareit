@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Autowired
     private UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User getById(Integer id) {

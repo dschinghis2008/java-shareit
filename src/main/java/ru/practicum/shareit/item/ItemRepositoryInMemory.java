@@ -1,8 +1,6 @@
 package ru.practicum.shareit.item;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,27 +10,45 @@ import ru.practicum.shareit.user.UserRepository;
 import java.util.*;
 
 @Repository
-@RequiredArgsConstructor
 @Slf4j
 public class ItemRepositoryInMemory implements ItemRepository {
 
-    @Autowired
     private UserRepository userRepository;
     private Map<Integer, Item> items = new HashMap<>();
     private Integer itemId = 0;
+
+    public ItemRepositoryInMemory(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     private Integer getItemId() {
         return ++itemId;
     }
 
-    @Override
-    public Item add(Item item) {
+    private void validateOnAdd(Item item) {
         if (!userRepository.isPresent(item.getOwner())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (item.getAvailable() == null || item.getName().equals("") || item.getDescription() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private void validateOnUpdate(Item item, Integer id) {
+        if (items.get((int) id) == null || (int) items.get((int) id).getOwner() != (int) item.getOwner()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private void validateOnDelete(Integer itemId, Integer userId) {
+        if (items.get((int) itemId) == null || items.get((int) itemId).getOwner() != (int) userId) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public Item add(Item item) {
+        validateOnAdd(item);
         item.setId(getItemId());
         items.put(item.getId(), item);
         log.info("добавлена вещь /{}/", item.toString());
@@ -41,10 +57,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
     @Override
     public Item update(Item item, Integer id) {
-        if (items.get((int)id) == null || (int)items.get((int)id).getOwner() != (int)item.getOwner()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
+        validateOnUpdate(item, id);
         Item itemUpd = items.get(id);
         if (item.getName() != null) {
             itemUpd.setName(item.getName());
@@ -71,7 +84,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
     public Collection<Item> getAll(Integer userId) {
         ArrayList<Item> itemList = new ArrayList<>();
         for (Item item : items.values()) {
-            if (item.getOwner() == (int)userId) {
+            if (item.getOwner() == (int) userId) {
                 itemList.add(item);
             }
         }
@@ -94,7 +107,8 @@ public class ItemRepositoryInMemory implements ItemRepository {
             mismatch = true;
             split = item.getName().split(" ");
             for (int i = 0; i < split.length; i++) {
-                if (split[i].length() >= text.length() && split[i].substring(0, text.length()).toLowerCase().equals(text.toLowerCase())) {
+                if (split[i].length() >= text.length()
+                        && split[i].substring(0, text.length()).toLowerCase().equals(text.toLowerCase())) {
                     itemList.add(item);
                     mismatch = false;
                     break;
@@ -106,7 +120,8 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
             split = item.getDescription().split(" ");
             for (int i = 0; i < split.length; i++) {
-                if (split[i].length() >= text.length() && split[i].substring(0, text.length()).toLowerCase().equals(text.toLowerCase())) {
+                if (split[i].length() >= text.length()
+                        && split[i].substring(0, text.length()).toLowerCase().equals(text.toLowerCase())) {
                     itemList.add(item);
                     break;
                 }
@@ -118,9 +133,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
     @Override
     public void delete(Integer itemId, Integer userId) {
-        if (items.get((int)itemId) == null || items.get((int)itemId).getOwner() != (int)userId) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        validateOnDelete(itemId, userId);
         items.remove(itemId);
         log.info("удалена вещь /id={}/", itemId);
     }

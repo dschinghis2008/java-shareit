@@ -1,25 +1,22 @@
 package ru.practicum.shareit.user;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * // TODO .
- */
 @RestController
 @RequestMapping(path = "/users")
-@RequiredArgsConstructor
 public class UserController {
-    @Autowired
     private final UserService userServiceImpl;
 
-    @Autowired
     private final UserMapper userMapper;
+
+    public UserController(UserService userServiceImpl, UserMapper userMapper) {
+        this.userServiceImpl = userServiceImpl;
+        this.userMapper = userMapper;
+    }
 
     @GetMapping("/{id}")
     public UserDto getById(@PathVariable Integer id) {

@@ -9,9 +9,6 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * // TODO .
- */
 @Slf4j
 @RestController
 @RequiredArgsConstructor

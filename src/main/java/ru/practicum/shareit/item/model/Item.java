@@ -4,9 +4,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
-/**
- * // TODO .
- */
 @Data
 public class Item {
     private Integer id;
