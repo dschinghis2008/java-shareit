@@ -1,9 +1,8 @@
 package ru.practicum.shareit.user;
 
 import java.util.Collection;
-import java.util.Optional;
 
-public interface UserService {
+public interface UserRepositoryOld {
     User getById(Integer id);
 
     Collection<User> getAll();
@@ -15,4 +14,6 @@ public interface UserService {
     void delete(Integer id);
 
     void deleteAll();
+
+    Boolean isPresent(Integer id);
 }

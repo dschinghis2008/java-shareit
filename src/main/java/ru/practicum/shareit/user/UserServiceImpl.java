@@ -1,12 +1,17 @@
 package ru.practicum.shareit.user;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -14,31 +19,52 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Integer id) {
-        return userRepository.getById(id);
+        return userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
     public Collection<User> getAll() {
-        return userRepository.getAll();
+        return userRepository.findAll();
     }
 
     @Override
     public User add(User user) {
-        return userRepository.add(user);
+        if (user.getName() == null || user.getEmail() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            log.info("добавлен пользователь /{}/", user.toString());
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException e){
+            log.info("нарушение уникальности /{}/", e.getLocalizedMessage());
+            return null;
+        }
+
     }
 
     @Override
     public User update(User user, Integer id) {
-        return userRepository.update(user, id);
+        User userUpd = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if(user.getEmail() != null){
+            userUpd.setEmail(user.getEmail());
+        }
+        if(user.getName() != null){
+            userUpd.setName(user.getName());
+        }
+        log.info("обновлен пользователь newValue=/{}/", userUpd.toString());
+        return userRepository.save(userUpd);
     }
 
     @Override
     public void delete(Integer id) {
-        userRepository.delete(id);
+        userRepository.deleteById(id);
+        log.info("удален пользователь /id={}/", id);
     }
 
     @Override
     public void deleteAll() {
         userRepository.deleteAll();
+        log.info("удалены все пользователи");
     }
 }
