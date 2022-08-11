@@ -27,9 +27,10 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestBody ItemDto itemDto, @PathVariable Integer itemId,
                           @RequestHeader("X-Sharer-User-Id") Integer userId) {
+        itemDto.setId(itemId);
         itemDto.setOwner(userId);
         Item item = itemMapper.toItem(itemDto);
-        return itemMapper.toDto(itemService.update(item, itemId));
+        return itemMapper.toDto(itemService.update(item, userId));
     }
 
     @GetMapping("/{itemId}")

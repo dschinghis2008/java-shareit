@@ -11,7 +11,7 @@ import java.util.*;
 
 @Repository
 @Slf4j
-public class ItemRepositoryInMemory implements ItemRepository {
+public class ItemRepositoryInMemory implements ItemRepositoryOld {
 
     private UserRepositoryOld userRepositoryOld;
     private Map<Integer, Item> items = new HashMap<>();
@@ -35,7 +35,8 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     private void validateOnUpdate(Item item, Integer id) {
-        if (items.get((int) id) == null || (int) items.get((int) id).getOwner() != (int) item.getOwner()) {
+        if (items.get((int) id) == null
+                || (int) items.get((int) id).getOwner() != (int) item.getOwner()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }

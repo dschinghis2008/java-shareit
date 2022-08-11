@@ -33,10 +33,10 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        try{
+        try {
             log.info("добавлен пользователь /{}/", user.toString());
             return userRepository.save(user);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             log.info("нарушение уникальности /{}/", e.getLocalizedMessage());
             return null;
         }
@@ -46,10 +46,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user, Integer id) {
         User userUpd = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if(user.getEmail() != null){
+        if (user.getEmail() != null) {
             userUpd.setEmail(user.getEmail());
         }
-        if(user.getName() != null){
+        if (user.getName() != null) {
             userUpd.setName(user.getName());
         }
         log.info("обновлен пользователь newValue=/{}/", userUpd.toString());

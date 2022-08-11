@@ -2,10 +2,16 @@ package ru.practicum.shareit.item.model;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Data
+@Entity
+@Table(name = "items")
 public class Item {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank(message = "name не может быть пустым")
@@ -20,5 +26,5 @@ public class Item {
     @NotBlank(message = "owner не может быть пустым")
     private Integer owner;
 
-    private String request;
+    private Integer request;
 }
