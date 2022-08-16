@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,14 +31,8 @@ public class UserServiceImpl implements UserService {
         if (user.getName() == null || user.getEmail() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-
-        try {
-            log.info("добавлен пользователь /{}/", user.toString());
-            return userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
-            log.info("нарушение уникальности /{}/", e.getLocalizedMessage());
-            return null;
-        }
+        log.info("добавлен пользователь /{}/", user.toString());
+        return userRepository.save(user);
 
     }
 
