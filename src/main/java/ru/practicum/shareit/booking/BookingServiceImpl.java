@@ -28,11 +28,11 @@ public class BookingServiceImpl implements BookingService {
 
     private void checkOnValidBeforeAdd(Booking booking,Integer ownerId) {
         if (itemRepository.findById(booking.getItem()).isEmpty()
-                || userRepository.findById(booking.getUser()).isEmpty()
+                || userRepository.findById(booking.getBookerId()).isEmpty()
                 || itemRepository.findById(booking.getItem()).isEmpty() ) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        if (booking.getUser() == null || booking.getStart() == null || booking.getEnd() == null
+        if (booking.getBookerId() == null || booking.getStart() == null || booking.getEnd() == null
                 || booking.getItem() == null
                 || !itemRepository.findById(booking.getItem()).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getAvailable()
@@ -109,14 +109,21 @@ public class BookingServiceImpl implements BookingService {
     public Collection<Booking> findAllByUserFuture(Integer userId) {
         checkValidUser(userId);
         log.info("запрошены бронирования пользователя /{}/ state=FUTURE", userId);
-        return bookingRepository.findByUserAndEndIsAfterOrderByStartDesc(userId,LocalDateTime.now());
+        return bookingRepository.findByBookerIdAndEndIsAfterOrderByStartDesc(userId,LocalDateTime.now());
     }
 
     @Override
     public Collection<Booking> findAllByUserPast(Integer userId) {
         checkValidUser(userId);
         log.info("запрошены бронирования пользователя /{}/ state=PAST", userId);
-        return bookingRepository.findByUserAndEndIsBeforeOrderByStartDesc(userId,LocalDateTime.now());
+        return bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(userId,LocalDateTime.now());
+    }
+
+    @Override
+    public Collection<Booking> findAllByUserCurrent(Integer userId) {
+        checkValidUser(userId);
+        log.info("запрошены бронирования пользователя /{}/ state=CURRENT", userId);
+        return bookingRepository.getByUserCurrent(userId,LocalDateTime.now());
     }
 
     @Override
@@ -145,5 +152,12 @@ public class BookingServiceImpl implements BookingService {
         checkValidUser(userId);
         log.info("запрошены бронирования вещей владельца /{}/ state=PAST", userId);
         return bookingRepository.getByOwnerPast(userId,LocalDateTime.now());
+    }
+
+    @Override
+    public Collection<Booking> findAllByOwnerCurrent(Integer userId) {
+        checkValidUser(userId);
+        log.info("запрошены бронирования вещей владельца /{}/ state=CURRENT", userId);
+        return bookingRepository.getByOwnerCurrent(userId,LocalDateTime.now());
     }
 }

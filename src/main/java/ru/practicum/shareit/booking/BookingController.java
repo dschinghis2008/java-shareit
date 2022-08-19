@@ -32,7 +32,7 @@ public class BookingController {
         bookingDto.setUserId(userId);
         Booking booking = bookingService.add(bookingMapper.toBooking(bookingDto),userId);
         item = itemService.getById(booking.getItem());
-        user = userService.getById(booking.getUser());
+        user = userService.getById(booking.getBookerId());
         return bookingMapper.toDto(booking, item, user);
     }
 
@@ -41,7 +41,7 @@ public class BookingController {
             , @RequestHeader("X-Sharer-User-Id") Integer userId) {
         Booking booking = bookingService.updApprove(bookingId, approved, userId);
         Item item = itemService.getById(booking.getItem());
-        User user = userService.getById(booking.getUser());
+        User user = userService.getById(booking.getBookerId());
         return bookingMapper.toDto(booking, item, user);
     }
 
@@ -49,7 +49,7 @@ public class BookingController {
     public BookingDto findById(@PathVariable Integer bookingId, @RequestHeader("X-Sharer-User-Id") Integer userId) {
         Booking booking = bookingService.findById(bookingId, userId);
         Item item = itemService.getById(booking.getItem());
-        User user = userService.getById(booking.getUser());
+        User user = userService.getById(booking.getBookerId());
         return bookingMapper.toDto(booking, item, user);
     }
 
@@ -61,7 +61,7 @@ public class BookingController {
             case ALL:
                 for (Booking booking : bookingService.findAllByUser(userId)) {
                     Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getUser());
+                    User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
@@ -71,21 +71,21 @@ public class BookingController {
             case CANCELED:
                 for (Booking booking : bookingService.findAllByUserAndStatus(userId, bookingMapper.toStatus(state))) {
                     Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getUser());
+                    User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case FUTURE:
                 for (Booking booking : bookingService.findAllByUserFuture(userId)) {
                     Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getUser());
+                    User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case PAST:
                 for (Booking booking : bookingService.findAllByUserPast(userId)) {
                     Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getUser());
+                    User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
@@ -103,7 +103,7 @@ public class BookingController {
             case ALL:
                 for (Booking booking : bookingService.findAllByOwner(userId)) {
                     Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getUser());
+                    User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
@@ -114,21 +114,21 @@ public class BookingController {
                 Status status = bookingMapper.toStatus(state);
                 for (Booking booking : bookingService.findAllByOwnerAndStatus(userId, status)) {
                     Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getUser());
+                    User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case FUTURE:
                 for (Booking booking : bookingService.findAllByOwnerFuture(userId)) {
                     Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getUser());
+                    User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case PAST:
                 for (Booking booking : bookingService.findAllByOwnerPast(userId)) {
                     Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getUser());
+                    User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;

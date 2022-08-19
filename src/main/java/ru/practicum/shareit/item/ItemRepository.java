@@ -12,7 +12,7 @@ public interface ItemRepository extends JpaRepository<Item,Integer> {
             + "or upper(o.description) like upper(concat('%',?1,'%'))) and o.available=true")
     Collection<Item> findByNameOrDesc(String text);
 
-    Collection<Item> findAllByOwner(Integer owner);
+    Collection<Item> findAllByOwnerOrderById(Integer owner);
 
     @Query(value = "select last_value from items_id_seq",nativeQuery = true)
     Integer findLastValue();

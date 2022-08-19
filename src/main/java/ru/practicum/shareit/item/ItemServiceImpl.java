@@ -5,9 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.item.dto.ItemDtoDate;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -18,6 +22,8 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+
+    private final BookingRepository bookingRepository;
 
     @Override
     public Item add(Item item) {
@@ -74,12 +80,46 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<Item> getAll(Integer userId) {
+    public Collection<ItemDtoDate> getAll(Integer userId) {
+        ArrayList<ItemDtoDate> list = new ArrayList<>();
+        for (Item item : itemRepository.findAllByOwnerOrderById(userId)) {
+            Booking bookingLast = bookingRepository.getLastBooking(item.getId(), LocalDateTime.now());
+            Booking bookNext = bookingRepository.getNextBooking(item.getId(), LocalDateTime.now());
+            ItemDtoDate itemDtoDate = new ItemDtoDate();
+            itemDtoDate.setId(item.getId());
+            itemDtoDate.setName(item.getName());
+            itemDtoDate.setDescription(item.getDescription());
+            itemDtoDate.setAvailable(item.getAvailable());
+            itemDtoDate.setOwner(item.getOwner());
+            itemDtoDate.setLastBooking(bookingLast);
+            itemDtoDate.setNextBooking(bookNext);
+            list.add(itemDtoDate);
+        }
         log.info("запрошены вещи владельца /{}/", userId);
-        return itemRepository.findAllByOwner(userId);
+        return list;
     }
 
     @Override
     public void delete(Integer itemId, Integer userId) {
     }
+
+    @Override
+    public ItemDtoDate getItemDate(Integer itemId, LocalDateTime dateTime, Integer userId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Booking bookingLast = bookingRepository.getLastBooking(itemId, LocalDateTime.now());
+        Booking bookNext = bookingRepository.getNextBooking(itemId, LocalDateTime.now());
+        ItemDtoDate itemDtoDate = new ItemDtoDate();
+        itemDtoDate.setId(itemId);
+        itemDtoDate.setName(item.getName());
+        itemDtoDate.setDescription(item.getDescription());
+        itemDtoDate.setAvailable(item.getAvailable());
+        itemDtoDate.setOwner(item.getOwner());
+        if (item.getOwner().equals(userId)) {
+            itemDtoDate.setLastBooking(bookingLast);
+            itemDtoDate.setNextBooking(bookNext);
+        }
+        return itemDtoDate;
+    }
+
 }

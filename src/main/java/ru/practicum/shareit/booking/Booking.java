@@ -3,7 +3,6 @@ package ru.practicum.shareit.booking;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -24,7 +23,7 @@ public class Booking {
     private Integer item;
 
     @Column(name = "user_id")
-    private Integer user;
+    private Integer bookerId;
 
     @Enumerated(EnumType.STRING)
     private Status status;

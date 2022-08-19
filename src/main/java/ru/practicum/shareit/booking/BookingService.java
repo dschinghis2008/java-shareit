@@ -23,8 +23,12 @@ public interface BookingService {
 
     Collection<Booking> findAllByOwnerPast(Integer userId);
 
+    Collection<Booking> findAllByOwnerCurrent(Integer userId);
+
     Collection<Booking> findAllByUserFuture(Integer userId);
 
     Collection<Booking> findAllByUserPast(Integer userId);
+
+    Collection<Booking> findAllByUserCurrent(Integer userId);
 
 }
