@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        log.info("добавлена вещь /{}/", item.toString());
+        log.info("добавлена вещь /{}/", item);
         return itemRepository.save(item);
     }
 
@@ -49,7 +49,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemRepository.findById(item.getId()).isEmpty() || userRepository.findById(userId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        if (itemRepository.findById(item.getId()).orElseThrow().getOwner() != userId) {
+        if (!itemRepository.findById(item.getId()).orElseThrow().getOwner().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Item itemUpd = itemRepository.findById(item.getId()).orElseThrow();
