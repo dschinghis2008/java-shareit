@@ -37,8 +37,8 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingDto updApprove(@PathVariable Integer bookingId, @RequestParam @NonNull Boolean approved
-            , @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public BookingDto updApprove(@PathVariable Integer bookingId, @RequestParam @NonNull Boolean approved,
+                                 @RequestHeader("X-Sharer-User-Id") Integer userId) {
         Booking booking = bookingService.updApprove(bookingId, approved, userId);
         Item item = itemService.getById(booking.getItem());
         User user = userService.getById(booking.getBookerId());
@@ -54,8 +54,8 @@ public class BookingController {
     }
 
     @GetMapping
-    public Collection<BookingDto> findAllByUser(@RequestHeader("X-Sharer-User-Id") Integer userId
-            , @RequestParam(defaultValue = "ALL") StatusDto state) {
+    public Collection<BookingDto> findAllByUser(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                                                @RequestParam(defaultValue = "ALL") StatusDto state) {
         ArrayList<BookingDto> listDto = new ArrayList<>();
         switch (state) {
             case ALL:
@@ -101,8 +101,8 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public Collection<BookingDto> findAllByOwner(@RequestHeader("X-Sharer-User-Id") Integer userId
-            , @RequestParam(defaultValue = "ALL") StatusDto state) {
+    public Collection<BookingDto> findAllByOwner(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                                                 @RequestParam(defaultValue = "ALL") StatusDto state) {
         ArrayList<BookingDto> listDto = new ArrayList<>();
         switch (state) {
             case ALL:

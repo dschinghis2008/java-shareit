@@ -60,8 +60,8 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(@RequestBody CommentDto commentDto, @PathVariable Integer itemId
-            , @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public CommentDto addComment(@RequestBody CommentDto commentDto, @PathVariable Integer itemId,
+                                 @RequestHeader("X-Sharer-User-Id") Integer userId) {
         Comment comment = commentMapper.toComment(commentDto);
         comment.setItem(itemId);
         comment.setAuthor(userId);
