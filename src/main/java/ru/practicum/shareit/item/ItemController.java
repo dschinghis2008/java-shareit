@@ -3,9 +3,12 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoDate;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +21,8 @@ import java.util.Collection;
 public class ItemController {
     private final ItemService itemService;
     private final ItemMapper itemMapper;
+
+    private final CommentMapper commentMapper;
 
     @PostMapping
     public ItemDto add(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
@@ -36,7 +41,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDtoDate getById(@PathVariable Integer itemId,@RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public ItemDtoDate getById(@PathVariable Integer itemId, @RequestHeader("X-Sharer-User-Id") Integer userId) {
         return itemService.getItemDate(itemId, LocalDateTime.now(), userId);
     }
 
@@ -53,4 +58,15 @@ public class ItemController {
         }
         return listDto;
     }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestBody CommentDto commentDto, @PathVariable Integer itemId
+            , @RequestHeader("X-Sharer-User-Id") Integer userId) {
+        Comment comment = commentMapper.toComment(commentDto);
+        comment.setItem(itemId);
+        comment.setAuthor(userId);
+        User user = itemService.getUser(userId);
+        return commentMapper.toDto(itemService.addComment(comment), user);
+    }
+
 }

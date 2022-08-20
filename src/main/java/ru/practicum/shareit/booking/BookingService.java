@@ -1,11 +1,9 @@
 package ru.practicum.shareit.booking;
 
-import ru.practicum.shareit.booking.dto.StatusDto;
-
 import java.util.Collection;
 
 public interface BookingService {
-    Booking add(Booking booking,Integer ownerId);
+    Booking add(Booking booking, Integer ownerId);
 
     Booking updApprove(Integer bookingId, Boolean approved, Integer userId);
 

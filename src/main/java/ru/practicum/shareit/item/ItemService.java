@@ -1,8 +1,9 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoDate;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -21,5 +22,9 @@ public interface ItemService {
     void delete(Integer itemId, Integer userId);
 
     ItemDtoDate getItemDate(Integer itemId, LocalDateTime dateTime, Integer userId);
+
+    Comment addComment(Comment comment);
+
+    User getUser(Integer id);
 
 }

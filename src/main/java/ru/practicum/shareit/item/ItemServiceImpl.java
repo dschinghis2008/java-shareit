@@ -7,13 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDtoDate;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -24,6 +26,10 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
 
     private final BookingRepository bookingRepository;
+
+    private final CommentRepository commentRepository;
+
+    private final CommentMapper commentMapper;
 
     @Override
     public Item add(Item item) {
@@ -109,6 +115,12 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Booking bookingLast = bookingRepository.getLastBooking(itemId, LocalDateTime.now());
         Booking bookNext = bookingRepository.getNextBooking(itemId, LocalDateTime.now());
+        Set<Comment> comments = commentRepository.findAllByItem(itemId);
+        Set<CommentDto> commentsDto = new HashSet<>();
+        for (Comment comment : comments) {
+            User user = userRepository.findById(bookingLast.getBookerId()).orElseThrow();
+            commentsDto.add(commentMapper.toDto(comment, user));
+        }
         ItemDtoDate itemDtoDate = new ItemDtoDate();
         itemDtoDate.setId(itemId);
         itemDtoDate.setName(item.getName());
@@ -119,7 +131,30 @@ public class ItemServiceImpl implements ItemService {
             itemDtoDate.setLastBooking(bookingLast);
             itemDtoDate.setNextBooking(bookNext);
         }
+        if (comments.size() > 0) {
+            itemDtoDate.setComments(commentsDto);
+        }
+        log.info("запрошена вещь /{}/", itemDtoDate);
         return itemDtoDate;
     }
 
+    @Override
+    public Comment addComment(Comment comment) {
+        log.info("Before findBooking>>>>>>>>>>>> comment= {}", comment);
+        Collection<Booking> bookings = bookingRepository.getByBookerAndItem(comment.getAuthor(), comment.getItem());
+        for (Booking booking : bookings) {
+            log.info("booking >>>>>>>>> = {}", booking);
+            if (booking != null && booking.getEnd().isBefore(LocalDateTime.now()) && !comment.getText().equals("")) {
+                log.info("добавлен отзыв /{}/", comment);
+                return commentRepository.save(comment);
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Override
+    public User getUser(Integer id) {
+        return userRepository.findById(id).orElseThrow();
+    }
 }

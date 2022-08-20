@@ -8,7 +8,7 @@ import ru.practicum.shareit.user.User;
 
 @Service
 public class BookingMapper {
-    public Booking toBooking(BookingDto bookingDto){
+    public Booking toBooking(BookingDto bookingDto) {
         Booking booking = new Booking();
         booking.setId(bookingDto.getId());
         booking.setStatus(bookingDto.getStatus());
@@ -19,7 +19,7 @@ public class BookingMapper {
         return booking;
     }
 
-    public BookingDto toDto(Booking booking,Item item,User user){
+    public BookingDto toDto(Booking booking, Item item, User user) {
         BookingDto dto = new BookingDto();
         dto.setId(booking.getId());
         dto.setStart(booking.getStart());
@@ -32,9 +32,9 @@ public class BookingMapper {
         return dto;
     }
 
-    public Status toStatus(StatusDto statusDto){
+    public Status toStatus(StatusDto statusDto) {
         Status status = null;
-        switch (statusDto){
+        switch (statusDto) {
             case WAITING:
                 status = Status.WAITING;
                 break;

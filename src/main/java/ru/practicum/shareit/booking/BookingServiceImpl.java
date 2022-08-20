@@ -20,16 +20,16 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
-    private void checkValidUser(Integer id){
-        if( userRepository.findById(id).isEmpty()){
+    private void checkValidUser(Integer id) {
+        if (userRepository.findById(id).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
-    private void checkOnValidBeforeAdd(Booking booking,Integer ownerId) {
+    private void checkOnValidBeforeAdd(Booking booking, Integer ownerId) {
         if (itemRepository.findById(booking.getItem()).isEmpty()
                 || userRepository.findById(booking.getBookerId()).isEmpty()
-                || itemRepository.findById(booking.getItem()).isEmpty() ) {
+                || itemRepository.findById(booking.getItem()).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (booking.getBookerId() == null || booking.getStart() == null || booking.getEnd() == null
@@ -40,21 +40,21 @@ public class BookingServiceImpl implements BookingService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        if (booking.getStart().isBefore(LocalDateTime.now()) ) {
+        if (booking.getStart().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        if(itemRepository.findById(booking.getItem()).orElseThrow().getOwner().equals(ownerId)){
+        if (itemRepository.findById(booking.getItem()).orElseThrow().getOwner().equals(ownerId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
     }
 
-    private Item findItem(Integer itemId){
+    private Item findItem(Integer itemId) {
         return itemRepository.findById(itemId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
-    public Booking add(Booking booking,Integer ownerId) {
+    public Booking add(Booking booking, Integer ownerId) {
         checkOnValidBeforeAdd(booking, ownerId);
         booking.setStatus(Status.WAITING);
         log.info("добавлено бронирование /{}/", booking.toString());
@@ -65,11 +65,11 @@ public class BookingServiceImpl implements BookingService {
     public Booking updApprove(Integer bookingId, Boolean approved, Integer userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        log.info("updApprove>>>>>booking={}, userId={}",booking.toString(),userId);
-        if(booking.getStatus() == Status.APPROVED){
+        log.info("updApprove>>>>>booking={}, userId={}", booking.toString(), userId);
+        if (booking.getStatus() == Status.APPROVED) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        if(!findItem(booking.getItem()).getOwner().equals(userId)){
+        if (!findItem(booking.getItem()).getOwner().equals(userId)) {
             log.info("updApprove>>NotFoundItem>>>");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -86,8 +86,8 @@ public class BookingServiceImpl implements BookingService {
     public Booking findById(Integer bookingId, Integer userId) {
         checkValidUser(userId);
         log.info("запрошено бронирование /{}/ владельца /{}/", bookingId, userId);
-            return bookingRepository.getById(bookingId, userId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return bookingRepository.getById(bookingId, userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
     }
 
@@ -109,21 +109,21 @@ public class BookingServiceImpl implements BookingService {
     public Collection<Booking> findAllByUserFuture(Integer userId) {
         checkValidUser(userId);
         log.info("запрошены бронирования пользователя /{}/ state=FUTURE", userId);
-        return bookingRepository.findByBookerIdAndEndIsAfterOrderByStartDesc(userId,LocalDateTime.now());
+        return bookingRepository.findByBookerIdAndEndIsAfterOrderByStartDesc(userId, LocalDateTime.now());
     }
 
     @Override
     public Collection<Booking> findAllByUserPast(Integer userId) {
         checkValidUser(userId);
         log.info("запрошены бронирования пользователя /{}/ state=PAST", userId);
-        return bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(userId,LocalDateTime.now());
+        return bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now());
     }
 
     @Override
     public Collection<Booking> findAllByUserCurrent(Integer userId) {
         checkValidUser(userId);
         log.info("запрошены бронирования пользователя /{}/ state=CURRENT", userId);
-        return bookingRepository.getByUserCurrent(userId,LocalDateTime.now());
+        return bookingRepository.getByUserCurrent(userId, LocalDateTime.now());
     }
 
     @Override
@@ -144,20 +144,20 @@ public class BookingServiceImpl implements BookingService {
     public Collection<Booking> findAllByOwnerFuture(Integer userId) {
         checkValidUser(userId);
         log.info("запрошены бронирования вещей владельца /{}/ state=FUTURE", userId);
-        return bookingRepository.getByOwnerFuture(userId,LocalDateTime.now());
+        return bookingRepository.getByOwnerFuture(userId, LocalDateTime.now());
     }
 
     @Override
     public Collection<Booking> findAllByOwnerPast(Integer userId) {
         checkValidUser(userId);
         log.info("запрошены бронирования вещей владельца /{}/ state=PAST", userId);
-        return bookingRepository.getByOwnerPast(userId,LocalDateTime.now());
+        return bookingRepository.getByOwnerPast(userId, LocalDateTime.now());
     }
 
     @Override
     public Collection<Booking> findAllByOwnerCurrent(Integer userId) {
         checkValidUser(userId);
         log.info("запрошены бронирования вещей владельца /{}/ state=CURRENT", userId);
-        return bookingRepository.getByOwnerCurrent(userId,LocalDateTime.now());
+        return bookingRepository.getByOwnerCurrent(userId, LocalDateTime.now());
     }
 }

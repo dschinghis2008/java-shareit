@@ -30,7 +30,7 @@ public class BookingController {
         Item item = new Item();
         bookingDto.setItem(item);
         bookingDto.setUserId(userId);
-        Booking booking = bookingService.add(bookingMapper.toBooking(bookingDto),userId);
+        Booking booking = bookingService.add(bookingMapper.toBooking(bookingDto), userId);
         item = itemService.getById(booking.getItem());
         user = userService.getById(booking.getBookerId());
         return bookingMapper.toDto(booking, item, user);
@@ -90,6 +90,11 @@ public class BookingController {
                 }
                 break;
             case CURRENT:
+                for (Booking booking : bookingService.findAllByUserCurrent(userId)) {
+                    Item item = itemService.getById(booking.getItem());
+                    User user = userService.getById(booking.getBookerId());
+                    listDto.add(bookingMapper.toDto(booking, item, user));
+                }
         }
 
         return listDto;
@@ -99,7 +104,7 @@ public class BookingController {
     public Collection<BookingDto> findAllByOwner(@RequestHeader("X-Sharer-User-Id") Integer userId
             , @RequestParam(defaultValue = "ALL") StatusDto state) {
         ArrayList<BookingDto> listDto = new ArrayList<>();
-        switch (state){
+        switch (state) {
             case ALL:
                 for (Booking booking : bookingService.findAllByOwner(userId)) {
                     Item item = itemService.getById(booking.getItem());
@@ -133,6 +138,11 @@ public class BookingController {
                 }
                 break;
             case CURRENT:
+                for (Booking booking : bookingService.findAllByOwnerCurrent(userId)) {
+                    Item item = itemService.getById(booking.getItem());
+                    User user = userService.getById(booking.getBookerId());
+                    listDto.add(bookingMapper.toDto(booking, item, user));
+                }
         }
 
         return listDto;

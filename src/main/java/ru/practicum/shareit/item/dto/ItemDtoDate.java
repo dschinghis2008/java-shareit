@@ -4,6 +4,8 @@ import lombok.Data;
 import ru.practicum.shareit.booking.Booking;
 
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class ItemDtoDate {
@@ -27,4 +29,6 @@ public class ItemDtoDate {
     private Booking lastBooking;
 
     private Booking nextBooking;
+
+    private Set<CommentDto> comments = new HashSet<>();
 }
