@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDtoDate;
-import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 
@@ -23,7 +23,7 @@ public interface ItemService {
 
     ItemDtoDate getItemDate(Integer itemId, LocalDateTime dateTime, Integer userId);
 
-    Comment addComment(Comment comment);
+    CommentDto addComment(CommentDto commentDto, Integer itemId, Integer userId);
 
     User getUser(Integer id);
 

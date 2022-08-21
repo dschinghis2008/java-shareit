@@ -139,16 +139,24 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Comment addComment(Comment comment) {
-        log.info("Before findBooking>>>>>>>>>>>> comment= {}", comment);
-        Collection<Booking> bookings = bookingRepository.getByBookerAndItem(comment.getAuthor(), comment.getItem());
+    public CommentDto addComment(CommentDto commentDto, Integer itemId, Integer userId) {
+
+        Comment comment = commentMapper.toComment(commentDto);
+        comment.setItem(itemId);
+        comment.setAuthor(userId);
+        User user = getUser(userId);
+        log.info("Before findBooking>>>>>>>>>>>> comment= {} , ====user= {}", commentDto, user);
+        Collection<Booking> bookings =
+                bookingRepository.getByBookerAndItem(comment.getAuthor(), comment.getItem());
         for (Booking booking : bookings) {
             log.info("booking >>>>>>>>> = {}", booking);
             if (booking != null && booking.getEnd().isBefore(LocalDateTime.now()) && !comment.getText().equals("")) {
                 log.info("добавлен отзыв /{}/", comment);
-                return commentRepository.save(comment);
+                commentRepository.save(comment);
+                return commentMapper.toDto(comment, user);
             }
         }
+
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
     }
