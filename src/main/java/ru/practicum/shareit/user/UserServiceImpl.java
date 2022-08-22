@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    private void checkOnValid(User user){
+    private void checkOnValid(User user) {
         if (user.getName() == null || user.getEmail() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
