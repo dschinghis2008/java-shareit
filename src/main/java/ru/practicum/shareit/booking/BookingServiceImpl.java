@@ -65,9 +65,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto add(BookingDto bookingDto, Integer ownerId) {
-        Booking booking = bookingMapper.toBooking(bookingDto);
-        checkOnValidBeforeAdd(booking, ownerId);
+    public BookingDto add(BookingDto bookingDto, Integer userId) {
+        Booking booking = bookingMapper.toBooking(bookingDto, userId);
+        checkOnValidBeforeAdd(booking, userId);
         booking.setStatus(Status.WAITING);
         log.info("добавлено бронирование /{}/", booking);
         bookingRepository.save(booking);

@@ -8,14 +8,14 @@ import ru.practicum.shareit.user.User;
 
 @Service
 public class BookingMapper {
-    public Booking toBooking(BookingDto bookingDto) {
+    public Booking toBooking(BookingDto bookingDto, Integer userId) {
         Booking booking = new Booking();
         booking.setId(bookingDto.getId());
         booking.setStatus(bookingDto.getStatus());
         booking.setStart(bookingDto.getStart());
         booking.setEnd(bookingDto.getEnd());
         booking.setItem(bookingDto.getItemId());
-        booking.setBookerId(bookingDto.getUserId());
+        booking.setBookerId(userId);
         return booking;
     }
 

@@ -24,17 +24,14 @@ public class ItemController {
 
     @PostMapping
     public ItemDto add(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
-        itemDto.setOwner(userId);
-        Item item = itemMapper.toItem(itemDto);
+        Item item = itemMapper.toItem(itemDto, userId, null);
         return itemMapper.toDto(itemService.add(item));
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestBody ItemDto itemDto, @PathVariable Integer itemId,
                           @RequestHeader("X-Sharer-User-Id") Integer userId) {
-        itemDto.setId(itemId);
-        itemDto.setOwner(userId);
-        Item item = itemMapper.toItem(itemDto);
+        Item item = itemMapper.toItem(itemDto, userId, itemId);
         return itemMapper.toDto(itemService.update(item, userId));
     }
 

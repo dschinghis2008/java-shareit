@@ -26,12 +26,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    @Override
-    public User add(User user) {
+    private void checkOnValid(User user){
         if (user.getName() == null || user.getEmail() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        log.info("добавлен пользователь /{}/", user.toString());
+    }
+
+    @Override
+    public User add(User user) {
+        checkOnValid(user);
+        log.info("добавлен пользователь /{}/", user);
         return userRepository.save(user);
 
     }
