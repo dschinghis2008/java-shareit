@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.Collection;
+import java.util.Set;
 
 public interface ItemRepository extends JpaRepository<Item, Integer> {
 
@@ -13,6 +14,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     Collection<Item> findByNameOrDesc(String text);
 
     Collection<Item> findAllByOwnerOrderById(Integer owner);
+
+    Set<Item> findByRequestId(Integer requestId);
 
     @Query(value = "select last_value from items_id_seq", nativeQuery = true)
     Integer findLastValue();

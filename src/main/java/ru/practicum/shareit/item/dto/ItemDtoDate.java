@@ -24,7 +24,7 @@ public class ItemDtoDate {
     @NotBlank(message = "owner не может быть пустым")
     private Integer owner;
 
-    private Integer request;
+    private Integer requestId;
 
     private Booking lastBooking;
 

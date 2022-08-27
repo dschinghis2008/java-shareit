@@ -62,8 +62,8 @@ public class ItemServiceImpl implements ItemService {
         if (item.getAvailable() != null) {
             itemUpd.setAvailable(item.getAvailable());
         }
-        if (item.getRequest() != null) {
-            itemUpd.setRequest(item.getRequest());
+        if (item.getRequestId() != null) {
+            itemUpd.setRequestId(item.getRequestId());
         }
         log.info("обновлена вещь newValue=/{}/", itemUpd.toString());
         return itemRepository.save(itemUpd);
