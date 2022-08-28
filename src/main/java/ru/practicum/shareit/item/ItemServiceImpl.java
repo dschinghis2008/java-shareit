@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -76,19 +77,20 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<Item> getByNameOrDesc(String text) {
+    public Collection<Item> getByNameOrDesc(String text, Integer page, Integer size) {
         if (text.equals("")) {
             return new ArrayList<Item>();
         }
-        ArrayList<Item> listSearch = (ArrayList<Item>) itemRepository.findByNameOrDesc(text);
+        List<Item> listSearch =
+                itemRepository.findByNameOrDesc(text, PageRequest.of(page, size)).toList();
         log.info("запрошен поиск по строке /{}/ ,найдено /{}/", text, listSearch.size());
         return listSearch;
     }
 
     @Override
-    public Collection<ItemDtoDate> getAll(Integer userId) {
+    public Collection<ItemDtoDate> getAll(Integer userId, Integer page, Integer size) {
         ArrayList<ItemDtoDate> list = new ArrayList<>();
-        for (Item item : itemRepository.findAllByOwnerOrderById(userId)) {
+        for (Item item : itemRepository.findAllByOwnerOrderById(userId, PageRequest.of(page, size)).toList()) {
             Booking bookingLast = bookingRepository.getLastBooking(item.getId(), LocalDateTime.now());
             Booking bookNext = bookingRepository.getNextBooking(item.getId(), LocalDateTime.now());
             ItemDtoDate itemDtoDate = new ItemDtoDate();

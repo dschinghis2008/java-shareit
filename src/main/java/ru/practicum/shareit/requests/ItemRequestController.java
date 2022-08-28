@@ -2,8 +2,6 @@ package ru.practicum.shareit.requests;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 
@@ -23,9 +21,7 @@ public class ItemRequestController {
     @PostMapping
     public ItemRequestDto add(@Valid @RequestBody ItemRequestDto itemRequestDto,
                               @RequestHeader("X-Sharer-User-Id") Integer requestorId) {
-        log.info(">>==RestBeforeMap==>>{},requestor={}", itemRequestDto, requestorId);
         ItemRequest itemRequest = itemRequestMapper.toItemRequest(itemRequestDto, requestorId);
-        log.info(">>==RestAfterMap==>>{}", itemRequest);
         return itemRequestMapper.toDto(itemRequestService.add(itemRequest));
     }
 

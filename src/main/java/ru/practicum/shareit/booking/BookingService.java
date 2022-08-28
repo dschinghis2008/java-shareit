@@ -12,8 +12,8 @@ public interface BookingService {
 
     BookingDto findById(Integer bookingId, Integer userId);
 
-    Collection<BookingDto> findAllByUser(Integer userId, StatusDto state);
+    Collection<BookingDto> findAllByUser(Integer userId, StatusDto state, Integer page, Integer size);
 
-    Collection<BookingDto> findAllByOwner(Integer userId, StatusDto state);
+    Collection<BookingDto> findAllByOwner(Integer userId, StatusDto state, Integer page, Integer size);
 
 }

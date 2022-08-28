@@ -3,20 +3,15 @@ package ru.practicum.shareit.requests;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -45,10 +40,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public Collection<ItemRequest> getAllOwn(Integer requestorId) {
-        log.info(">>>>>getAllOwn>>>>====START");
         checkUser(requestorId);
         Collection<ItemRequest> itemRequests = itemRequestRepository.getRequestsByRequestor(requestorId);
-        log.info(">>>>>getAllOwn>>>>====AFTER REPOSITORY");
         if (itemRequests.isEmpty()) {
             return new ArrayList<ItemRequest>();
         }
@@ -73,7 +66,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public Collection<ItemRequest> getAll(Integer requestorId, Integer page, Integer size) {
         checkUser(requestorId);
-        log.info(">>>===запрошены все request пользователем requestorId=/{}/ page=/{}/ size= /{}/===<<<<",requestorId, page, size);
+        log.info(">>>===запрошены все request пользователем requestorId=/{}/ page=/{}/ size= /{}/===<<<<",
+                requestorId, page, size);
         if (page < 0 || size < 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

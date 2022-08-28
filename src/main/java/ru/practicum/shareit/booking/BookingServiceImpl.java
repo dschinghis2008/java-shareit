@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -111,51 +112,62 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toDto(booking, item, user);
     }
 
-    private Collection<Booking> findAllByUserAndStatus(Integer userId, Status stat) {
+    private Collection<Booking> findAllByUserAndStatus(Integer userId, Status stat, Integer page, Integer size) {
         checkValidUser(userId);
         log.info("запрошены бронирования пользователя /{}/ со статусом /{}/", userId, stat);
-        return bookingRepository.getBookingsByUserAndStatus(userId, stat);
+        return bookingRepository.getBookingsByUserAndStatus(userId, stat, PageRequest.of(page, size)).toList();
     }
 
     @Override
-    public Collection<BookingDto> findAllByUser(Integer userId, StatusDto state) {
+    public Collection<BookingDto> findAllByUser(Integer userId, StatusDto state, Integer page, Integer size) {
+        if (page < 0 || size < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         checkValidUser(userId);
+
+        Integer countBookings = bookingRepository.getCountBookingsByUser(userId);
+        if (countBookings - page < size) {
+            size = countBookings - page;
+        }
+
         ArrayList<BookingDto> listDto = new ArrayList<>();
         switch (state) {
             case ALL:
-                for (Booking booking : bookingRepository.getBookingsByUser(userId)) {
+                for (Booking booking : bookingRepository.getBookingsByUser(userId,
+                        PageRequest.of(page, size)).toList()) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
-                log.info("запрошены бронирования пользователя /{}/", userId);
+                log.info("запрошены бронирования пользователя /{}/,status=/{}/,page=/{}/,size=/{}/",
+                        userId, state, page, size);
                 break;
             case WAITING:
             case APPROVED:
             case REJECTED:
             case CANCELED:
-                for (Booking booking : findAllByUserAndStatus(userId, bookingMapper.toStatus(state))) {
+                for (Booking booking : findAllByUserAndStatus(userId, bookingMapper.toStatus(state), page, size)) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case FUTURE:
-                for (Booking booking : findAllByUserFuture(userId)) {
+                for (Booking booking : findAllByUserFuture(userId, page, size)) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case PAST:
-                for (Booking booking : findAllByUserPast(userId)) {
+                for (Booking booking : findAllByUserPast(userId, page, size)) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case CURRENT:
-                for (Booking booking : findAllByUserCurrent(userId)) {
+                for (Booking booking : findAllByUserCurrent(userId, page, size)) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
@@ -166,31 +178,36 @@ public class BookingServiceImpl implements BookingService {
     }
 
 
-    private Collection<Booking> findAllByUserFuture(Integer userId) {
+    private Collection<Booking> findAllByUserFuture(Integer userId, Integer page, Integer size) {
         checkValidUser(userId);
         log.info("запрошены бронирования пользователя /{}/ state=FUTURE", userId);
-        return bookingRepository.findByBookerIdAndEndIsAfterOrderByStartDesc(userId, LocalDateTime.now());
+        return bookingRepository.findByBookerIdAndEndIsAfterOrderByStartDesc(userId, LocalDateTime.now(),
+                PageRequest.of(page, size)).toList();
     }
 
-    private Collection<Booking> findAllByUserPast(Integer userId) {
+    private Collection<Booking> findAllByUserPast(Integer userId, Integer page, Integer size) {
         checkValidUser(userId);
         log.info("запрошены бронирования пользователя /{}/ state=PAST", userId);
-        return bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now());
+        return bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now(),
+                PageRequest.of(page, size)).toList();
     }
 
-    private Collection<Booking> findAllByUserCurrent(Integer userId) {
+    private Collection<Booking> findAllByUserCurrent(Integer userId, Integer page, Integer size) {
         checkValidUser(userId);
         log.info("запрошены бронирования пользователя /{}/ state=CURRENT", userId);
-        return bookingRepository.getByUserCurrent(userId, LocalDateTime.now());
+        return bookingRepository.getByUserCurrent(userId, LocalDateTime.now(), PageRequest.of(page, size)).toList();
     }
 
     @Override
-    public Collection<BookingDto> findAllByOwner(Integer userId, StatusDto state) {
+    public Collection<BookingDto> findAllByOwner(Integer userId, StatusDto state, Integer page, Integer size) {
+        if (page < 0 || size < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         checkValidUser(userId);
         ArrayList<BookingDto> listDto = new ArrayList<>();
         switch (state) {
             case ALL:
-                for (Booking booking : bookingRepository.getAllByOwner(userId)) {
+                for (Booking booking : bookingRepository.getAllByOwner(userId, PageRequest.of(page, size)).toList()) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
@@ -202,28 +219,28 @@ public class BookingServiceImpl implements BookingService {
             case REJECTED:
             case CANCELED:
                 Status status = bookingMapper.toStatus(state);
-                for (Booking booking : findAllByOwnerAndStatus(userId, status)) {
+                for (Booking booking : findAllByOwnerAndStatus(userId, status, page, size)) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case FUTURE:
-                for (Booking booking : findAllByOwnerFuture(userId)) {
+                for (Booking booking : findAllByOwnerFuture(userId, page, size)) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case PAST:
-                for (Booking booking : findAllByOwnerPast(userId)) {
+                for (Booking booking : findAllByOwnerPast(userId, page, size)) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case CURRENT:
-                for (Booking booking : findAllByOwnerCurrent(userId)) {
+                for (Booking booking : findAllByOwnerCurrent(userId, page, size)) {
                     Item item = itemService.getById(booking.getItem());
                     User user = userService.getById(booking.getBookerId());
                     listDto.add(bookingMapper.toDto(booking, item, user));
@@ -232,27 +249,27 @@ public class BookingServiceImpl implements BookingService {
         return listDto;
     }
 
-    private Collection<Booking> findAllByOwnerAndStatus(Integer userId, Status stat) {
+    private Collection<Booking> findAllByOwnerAndStatus(Integer userId, Status stat, Integer page, Integer size) {
         checkValidUser(userId);
         log.info("запрошены бронирования вещей владельца /{}/ со статусом /{}/", userId, stat);
-        return bookingRepository.getAllByOwnerAndStatus(userId, stat);
+        return bookingRepository.getAllByOwnerAndStatus(userId, stat, PageRequest.of(page, size)).toList();
     }
 
-    private Collection<Booking> findAllByOwnerFuture(Integer userId) {
+    private Collection<Booking> findAllByOwnerFuture(Integer userId, Integer page, Integer size) {
         checkValidUser(userId);
         log.info("запрошены бронирования вещей владельца /{}/ state=FUTURE", userId);
-        return bookingRepository.getByOwnerFuture(userId, LocalDateTime.now());
+        return bookingRepository.getByOwnerFuture(userId, LocalDateTime.now(), PageRequest.of(page, size)).toList();
     }
 
-    private Collection<Booking> findAllByOwnerPast(Integer userId) {
+    private Collection<Booking> findAllByOwnerPast(Integer userId, Integer page, Integer size) {
         checkValidUser(userId);
         log.info("запрошены бронирования вещей владельца /{}/ state=PAST", userId);
-        return bookingRepository.getByOwnerPast(userId, LocalDateTime.now());
+        return bookingRepository.getByOwnerPast(userId, LocalDateTime.now(), PageRequest.of(page, size)).toList();
     }
 
-    private Collection<Booking> findAllByOwnerCurrent(Integer userId) {
+    private Collection<Booking> findAllByOwnerCurrent(Integer userId, Integer page, Integer size) {
         checkValidUser(userId);
         log.info("запрошены бронирования вещей владельца /{}/ state=CURRENT", userId);
-        return bookingRepository.getByOwnerCurrent(userId, LocalDateTime.now());
+        return bookingRepository.getByOwnerCurrent(userId, LocalDateTime.now(), PageRequest.of(page, size)).toList();
     }
 }
