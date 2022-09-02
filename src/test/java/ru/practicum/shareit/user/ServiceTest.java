@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +28,7 @@ public class ServiceTest {
     private final User user2 = new User();
 
     @BeforeEach
-    public void initial() {
+    public void init() {
         user1.setId(1);
         user1.setName("user1");
         user1.setEmail("u1@user.com");
@@ -99,6 +101,14 @@ public class ServiceTest {
         Mockito
                 .verify(userRepository,Mockito.times(1))
                 .deleteAll();
+    }
+
+    @Test
+    public void getUserWithInvalidId(){
+        Mockito
+                .when(userRepository.findById(99))
+                .thenReturn(null);
+        Assertions.assertThrows(NullPointerException.class, () -> userService.getById(99));
     }
 
 }
