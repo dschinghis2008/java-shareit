@@ -19,7 +19,7 @@ public class User {
     @NotBlank(message = "имя не может быть пустым")
     private String name;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     @NotBlank(message = "емайл не может быть пустым")
     @Email(message = "неверный формат емайл")
     private String email;

@@ -41,7 +41,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("select b from Booking b join Item i on i.id=b.item and i.id=?1 and b.end<?2")
     Booking getLastBooking(Integer itemId, LocalDateTime dateTime);
 
-    @Query("select b from Booking b join Item i on i.id=b.item and i.id=?1 and b.start>?2")
+    @Query("select b from Booking b join Item i on i.id=b.item and i.id=?1 and b.start>?2 and b.end>?2")
     Booking getNextBooking(Integer itemId, LocalDateTime dateTime);
 
     Page<Booking> findByBookerIdAndEndIsBeforeOrderByStartDesc(Integer userId, LocalDateTime date, Pageable pageable);

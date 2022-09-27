@@ -23,9 +23,9 @@ public class IntgrServiceTest {
 
     @BeforeEach
     public void init() {
-        entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE;").executeUpdate();
-        entityManager.createNativeQuery("TRUNCATE table users restart identity;").executeUpdate();
-        entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE;").executeUpdate();
+        entityManager.createNativeQuery("set referential_integrity false;").executeUpdate();
+        entityManager.createNativeQuery("truncate table users restart identity;").executeUpdate();
+        entityManager.createNativeQuery("set referential_integrity true;").executeUpdate();
         user1.setName("user1");
         user1.setEmail("u1@user.com");
         user2.setName("user2");

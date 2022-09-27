@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -66,7 +68,7 @@ public class ItemServiceImpl implements ItemService {
         if (item.getRequestId() != null) {
             itemUpd.setRequestId(item.getRequestId());
         }
-        log.info("обновлена вещь newValue=/{}/", itemUpd.toString());
+        log.info("обновлена вещь newValue=/{}/", itemUpd);
         return itemRepository.save(itemUpd);
     }
 
@@ -109,13 +111,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void delete(Integer itemId, Integer userId) {
+        itemRepository.deleteById(itemId);
     }
 
     @Override
     public ItemDtoDate getItemDate(Integer itemId, LocalDateTime dateTime, Integer userId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Booking bookingLast = bookingRepository.getLastBooking(itemId, LocalDateTime.now());
+        Booking bookingLast = bookingRepository.getLastBooking(itemId, LocalDateTime.now().withNano(0));
         Booking bookNext = bookingRepository.getNextBooking(itemId, LocalDateTime.now());
         Set<Comment> comments = commentRepository.findAllByItem(itemId);
         Set<CommentDto> commentsDto = new HashSet<>();

@@ -15,9 +15,9 @@ import javax.persistence.TypedQuery;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RepositoryTest {
     @Autowired
-    TestEntityManager entityManager;
-    User user1 = new User();
-    User user2 = new User();
+    private TestEntityManager entityManager;
+    private User user1 = new User();
+    private User user2 = new User();
 
     @Test
     public void getUserByEmailTest(){

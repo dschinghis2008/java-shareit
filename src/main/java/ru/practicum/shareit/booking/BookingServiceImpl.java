@@ -9,11 +9,9 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.StatusDto;
 import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
-import ru.practicum.shareit.user.UserService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,10 +24,6 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
-
-    private final UserService userService;
-
-    private final ItemService itemService;
 
     private final BookingMapper bookingMapper;
 
@@ -47,8 +41,7 @@ public class BookingServiceImpl implements BookingService {
         if (booking.getBookerId() == null || booking.getStart() == null || booking.getEnd() == null
                 || booking.getItem() == null
                 || !itemRepository.findById(booking.getItem())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getAvailable()
-                || booking.getEnd().isBefore(booking.getStart())) {
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getAvailable()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
@@ -72,8 +65,8 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(Status.WAITING);
         log.info("добавлено бронирование /{}/", booking);
         bookingRepository.save(booking);
-        Item item = itemService.getById(booking.getItem());
-        User user = userService.getById(booking.getBookerId());
+        Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+        User user = userRepository.findById(booking.getBookerId()).orElseThrow();
         return bookingMapper.toDto(booking, item, user);
     }
 
@@ -94,8 +87,8 @@ public class BookingServiceImpl implements BookingService {
         } else {
             booking.setStatus(Status.REJECTED);
         }
-        Item item = itemService.getById(booking.getItem());
-        User user = userService.getById(booking.getBookerId());
+        Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+        User user = userRepository.findById(booking.getBookerId()).orElseThrow();
         log.info("изменен статус бронирования /{}/", booking);
         bookingRepository.save(booking);
         return bookingMapper.toDto(booking, item, user);
@@ -106,8 +99,8 @@ public class BookingServiceImpl implements BookingService {
         checkValidUser(userId);
         Booking booking = bookingRepository.getById(bookingId, userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Item item = itemService.getById(booking.getItem());
-        User user = userService.getById(booking.getBookerId());
+        Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+        User user = userRepository.findById(booking.getBookerId()).orElseThrow();
         log.info("запрошено бронирование /{}/ владельца /{}/", bookingId, userId);
         return bookingMapper.toDto(booking, item, user);
     }
@@ -134,9 +127,9 @@ public class BookingServiceImpl implements BookingService {
         switch (state) {
             case ALL:
                 for (Booking booking : bookingRepository.getBookingsByUser(userId,
-                        PageRequest.of(page, size)).toList()) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                        PageRequest.of(page, size)).getContent()) {
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 log.info("запрошены бронирования пользователя /{}/,status=/{}/,page=/{}/,size=/{}/",
@@ -147,29 +140,29 @@ public class BookingServiceImpl implements BookingService {
             case REJECTED:
             case CANCELED:
                 for (Booking booking : findAllByUserAndStatus(userId, bookingMapper.toStatus(state), page, size)) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case FUTURE:
                 for (Booking booking : findAllByUserFuture(userId, page, size)) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case PAST:
                 for (Booking booking : findAllByUserPast(userId, page, size)) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case CURRENT:
                 for (Booking booking : findAllByUserCurrent(userId, page, size)) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
         }
@@ -208,8 +201,8 @@ public class BookingServiceImpl implements BookingService {
         switch (state) {
             case ALL:
                 for (Booking booking : bookingRepository.getAllByOwner(userId, PageRequest.of(page, size)).toList()) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 log.info("запрошены бронирования вещей владельца /{}/", userId);
@@ -220,29 +213,29 @@ public class BookingServiceImpl implements BookingService {
             case CANCELED:
                 Status status = bookingMapper.toStatus(state);
                 for (Booking booking : findAllByOwnerAndStatus(userId, status, page, size)) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case FUTURE:
                 for (Booking booking : findAllByOwnerFuture(userId, page, size)) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case PAST:
                 for (Booking booking : findAllByOwnerPast(userId, page, size)) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
                 break;
             case CURRENT:
                 for (Booking booking : findAllByOwnerCurrent(userId, page, size)) {
-                    Item item = itemService.getById(booking.getItem());
-                    User user = userService.getById(booking.getBookerId());
+                    Item item = itemRepository.findById(booking.getItem()).orElseThrow();
+                    User user = userRepository.findById(booking.getBookerId()).orElseThrow();
                     listDto.add(bookingMapper.toDto(booking, item, user));
                 }
         }
