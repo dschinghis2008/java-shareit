@@ -6,19 +6,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.requests.ItemRequest;
-import ru.practicum.shareit.requests.ItemRequestRepository;
 import ru.practicum.shareit.requests.ItemRequestService;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@Transactional
+@SpringBootTest(properties = "db.name=test", webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ServiceRequestTest {
 
@@ -27,7 +29,8 @@ public class ServiceRequestTest {
 
     private final ItemRepository itemRepository;
 
-    private final ItemRequestRepository itemRequestRepository;
+    private final EntityManager entityManager;
+
     private final User user1 = new User();
     private final User user2 = new User();
     private final Item item1 = new Item();
@@ -37,6 +40,12 @@ public class ServiceRequestTest {
 
     @BeforeEach
     public void init() {
+        entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE;").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE table items restart identity;").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE table users restart identity;").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE table requests restart identity;").executeUpdate();
+        entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE;").executeUpdate();
+
         user1.setId(1);
         user1.setName("user1");
         user1.setEmail("u1@user.com");
@@ -112,7 +121,6 @@ public class ServiceRequestTest {
         Assertions.assertEquals(collection.toArray()[1], request2);
         Item itemResult = itemRepository.save(item1);
         Assertions.assertEquals(itemResult, item1);
-        //itemRepository.deleteAll();
     }
 
 }
