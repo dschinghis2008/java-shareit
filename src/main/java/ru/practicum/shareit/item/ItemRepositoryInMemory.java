@@ -5,20 +5,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.UserRepositoryOld;
 
 import java.util.*;
 
 @Repository
 @Slf4j
-public class ItemRepositoryInMemory implements ItemRepository {
+public class ItemRepositoryInMemory implements ItemRepositoryOld {
 
-    private UserRepository userRepository;
+    private UserRepositoryOld userRepositoryOld;
     private Map<Integer, Item> items = new HashMap<>();
     private Integer itemId = 0;
 
-    public ItemRepositoryInMemory(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public ItemRepositoryInMemory(UserRepositoryOld userRepositoryOld) {
+        this.userRepositoryOld = userRepositoryOld;
     }
 
     private Integer getItemId() {
@@ -26,7 +26,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     private void validateOnAdd(Item item) {
-        if (!userRepository.isPresent(item.getOwner())) {
+        if (!userRepositoryOld.isPresent(item.getOwner())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (item.getAvailable() == null || item.getName().equals("") || item.getDescription() == null) {
@@ -35,7 +35,8 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     private void validateOnUpdate(Item item, Integer id) {
-        if (items.get((int) id) == null || (int) items.get((int) id).getOwner() != (int) item.getOwner()) {
+        if (items.get((int) id) == null
+                || (int) items.get((int) id).getOwner() != (int) item.getOwner()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }

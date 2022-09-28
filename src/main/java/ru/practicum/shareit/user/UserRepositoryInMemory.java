@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Slf4j
 @Repository
-public class UserRepositoryInMemory implements UserRepository {
+public class UserRepositoryInMemory implements UserRepositoryOld {
     private final Map<Integer, User> users = new HashMap<>();
     private Integer idUser = 0;
 

@@ -25,10 +25,10 @@ public class ItemMapper {
         return itemDto;
     }
 
-    public Item toItem(ItemDto itemDto) {
+    public Item toItem(ItemDto itemDto, Integer ownerId, Integer id) {
         Item item = new Item();
 
-        item.setId(itemDto.getId());
+        item.setId(id);
 
         item.setName(itemDto.getName());
 
@@ -36,7 +36,7 @@ public class ItemMapper {
 
         item.setAvailable(itemDto.getAvailable());
 
-        item.setOwner(itemDto.getOwner());
+        item.setOwner(ownerId);
 
         item.setRequest(itemDto.getRequest());
 
