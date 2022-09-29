@@ -268,7 +268,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.getByOwnerCurrent(userId, LocalDateTime.now(), PageRequest.of(page, size)).toList();
     }
 
-    public void updBookingDate(Integer id, LocalDateTime dateTime){
+    public void updBookingDate(Integer id, LocalDateTime dateTime) {
         Booking upd = bookingRepository.findById(id).orElseThrow();
         upd.setStart(dateTime);
         upd.setEnd(dateTime.plusDays(2));
