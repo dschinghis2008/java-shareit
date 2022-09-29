@@ -108,7 +108,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void updateItemTest(){
+    public void updateItemTest() {
         itemDto1.setId(1);
         itemDto1.setName("updItem");
         itemDto1.setDescription("descr of updItem");
@@ -133,7 +133,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void getItemByIdTest(){
+    public void getItemByIdTest() {
         when(itemService.getItemDate(Mockito.anyInt(), Mockito.any(LocalDateTime.class), Mockito.anyInt()))
                 .thenReturn(itemDtoDate1);
         try {
@@ -150,7 +150,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void getAllItemsByOwnerTest(){
+    public void getAllItemsByOwnerTest() {
         when(itemService.getAll(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(List.of(itemDtoDate1, itemDtoDate2));
         try {
@@ -167,7 +167,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void getByNameOrDescItemTest(){
+    public void getByNameOrDescItemTest() {
         item = itemMapper.toItem(itemDto1, 1, null);
         Item item2 = itemMapper.toItem(itemDto2, 1, null);
         when(itemService.getByNameOrDesc(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
@@ -188,7 +188,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void addCommentTest(){
+    public void addCommentTest() {
         Comment comment = new Comment();
         comment.setId(1);
         comment.setAuthor(1);

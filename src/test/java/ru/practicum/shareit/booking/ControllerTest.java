@@ -39,7 +39,7 @@ public class ControllerTest {
     private MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private BookingDto bookingDto1 = new BookingDto();
+    private final BookingDto bookingDto1 = new BookingDto();
     private Booking booking1;
     private Booking booking2;
     private final User user1 = new User();
@@ -100,7 +100,7 @@ public class ControllerTest {
         booking1.setStart(null);
         try {
             mockMvc.perform(post("/bookings")
-                    .content(objectMapper.writeValueAsString(bookingMapper.toDto(booking1, item, user2)))
+                            .content(objectMapper.writeValueAsString(bookingMapper.toDto(booking1, item, user2)))
                             .characterEncoding(StandardCharsets.UTF_8)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
@@ -112,7 +112,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void updApproveTest(){
+    public void updApproveTest() {
         booking1.setStatus(Status.APPROVED);
         when(bookingService.updApprove(Mockito.anyInt(), Mockito.anyBoolean(), Mockito.anyInt()))
                 .thenReturn(bookingMapper.toDto(booking1, item, user2));
@@ -133,7 +133,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void findBookingByIdTest(){
+    public void findBookingByIdTest() {
         when(bookingService.findById(1, 2))
                 .thenReturn(bookingDto1);
         try {
@@ -151,9 +151,9 @@ public class ControllerTest {
     }
 
     @Test
-    public void findAllBookingsByUser(){
+    public void findAllBookingsByUser() {
         BookingDto bookingDto2 = bookingMapper.toDto(booking2, item, user2);
-        when(bookingService.findAllByUser(Mockito.anyInt(),Mockito.any(StatusDto.class),
+        when(bookingService.findAllByUser(Mockito.anyInt(), Mockito.any(StatusDto.class),
                 Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(List.of(bookingDto1, bookingDto2));
         try {
@@ -180,9 +180,9 @@ public class ControllerTest {
     }
 
     @Test
-    public void findAllByOwner(){
+    public void findAllByOwner() {
         BookingDto bookingDto2 = bookingMapper.toDto(booking2, item, user2);
-        when(bookingService.findAllByOwner(Mockito.anyInt(),Mockito.any(StatusDto.class),
+        when(bookingService.findAllByOwner(Mockito.anyInt(), Mockito.any(StatusDto.class),
                 Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(List.of(bookingDto1, bookingDto2));
         try {
@@ -209,7 +209,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void fromDtoToBookingMapperTest(){
+    public void fromDtoToBookingMapperTest() {
         Booking bookingResult = bookingMapper.toBooking(bookingDto1, user2.getId());
         Assertions.assertEquals(bookingResult.getId(), bookingDto1.getId());
         Assertions.assertEquals(bookingResult.getItem(), bookingDto1.getItemId());
@@ -220,7 +220,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void fromBookingToDtoBookingMapperTest(){
+    public void fromBookingToDtoBookingMapperTest() {
         BookingDto bookingDtoResult = bookingMapper.toDto(booking1, item, user2);
         Assertions.assertEquals(bookingDtoResult.getId(), booking1.getId());
         Assertions.assertEquals(bookingDtoResult.getItemId(), booking1.getItem());

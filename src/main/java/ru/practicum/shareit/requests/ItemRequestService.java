@@ -1,7 +1,6 @@
 package ru.practicum.shareit.requests;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface ItemRequestService {
     ItemRequest add(ItemRequest itemRequest);

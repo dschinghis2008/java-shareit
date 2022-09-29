@@ -29,7 +29,7 @@ public class RepositoryTest {
     private final ItemRepository itemRepository;
 
     @Test
-    public void findByNameOrDescriptionItemTest(){
+    public void findByNameOrDescriptionItemTest() {
         user1.setName("user1");
         user1.setEmail("u1@user.com");
         entityManager.persist(user1);
@@ -40,11 +40,11 @@ public class RepositoryTest {
         entityManager.persist(item1);
         TypedQuery<Item> query = entityManager.getEntityManager()
                 .createQuery("select i from Item i where upper(i.name) like upper(concat('%',:str,'%')) or "
-                + "upper(i.description) like upper(concat('%',:str,'%')) ",Item.class);
+                        + "upper(i.description) like upper(concat('%',:str,'%')) ", Item.class);
         Item itemResult = query.setParameter("str", "item").getSingleResult();
-        Assertions.assertEquals(itemResult.getName(),item1.getName());
+        Assertions.assertEquals(itemResult.getName(), item1.getName());
         itemResult = query.setParameter("str", "Desc ITEM").getSingleResult();
-        Assertions.assertEquals(itemResult.getDescription(),item1.getDescription());
+        Assertions.assertEquals(itemResult.getDescription(), item1.getDescription());
 
         Pageable pageable = PageRequest.of(0, 10);
         Collection<Item> items = itemRepository.findByNameOrDesc("item", pageable).getContent();

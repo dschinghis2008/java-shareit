@@ -10,7 +10,7 @@ public class UserDtoMappingTest {
     private final UserDto dto = new UserDto();
 
     @BeforeEach
-    public void init(){
+    public void init() {
         user.setId(1);
         user.setName("user");
         user.setEmail("u@user.com");
@@ -21,13 +21,13 @@ public class UserDtoMappingTest {
     }
 
     @Test
-    public void toDtoFromUserTest(){
+    public void toDtoFromUserTest() {
         UserDto result = userMapper.toDto(user);
         Assertions.assertEquals(result, dto);
     }
 
     @Test
-    public void toUserFromDtoTest(){
+    public void toUserFromDtoTest() {
         User result = userMapper.toUser(dto);
         Assertions.assertEquals(result, user);
     }

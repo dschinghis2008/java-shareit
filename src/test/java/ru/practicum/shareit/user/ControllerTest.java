@@ -55,7 +55,7 @@ public class ControllerTest {
     public void addUserTest() {
         when(userService.add(Mockito.any(User.class)))
                 .thenReturn(user);
-       try {
+        try {
             mvc.perform(post("/users")
                             .content(objectMapper.writeValueAsString(userDto))
                             .characterEncoding(StandardCharsets.UTF_8)
@@ -64,9 +64,9 @@ public class ControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.name", is("User1")))
                     .andExpect(jsonPath("$.email", is("u1@user.com")));
-       } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
-       }
+        }
 
     }
 
@@ -93,14 +93,14 @@ public class ControllerTest {
     }
 
     @Test
-    public void updateUserWithUserMapperDtoTest(){
+    public void updateUserWithUserMapperDtoTest() {
         userDto.setName("UpdUser");
         userDto.setEmail("upd@user.com");
         user = userMapper.toUser(userDto);
-        when(userService.update(Mockito.any(User.class),Mockito.anyInt()))
+        when(userService.update(Mockito.any(User.class), Mockito.anyInt()))
                 .thenReturn(user);
         try {
-            mvc.perform(patch("/users/{id}",userDto.getId())
+            mvc.perform(patch("/users/{id}", userDto.getId())
                             .content(objectMapper.writeValueAsString(userDto))
                             .characterEncoding(StandardCharsets.UTF_8)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -108,17 +108,17 @@ public class ControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.name", is("UpdUser")))
                     .andExpect(jsonPath("$.email", is("upd@user.com")));
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Test
-    public void getUserByIdTest(){
+    public void getUserByIdTest() {
         when(userService.getById(Mockito.anyInt()))
                 .thenReturn(user);
         try {
-            mvc.perform(get("/users/{id}",userDto.getId())
+            mvc.perform(get("/users/{id}", userDto.getId())
                             .content(objectMapper.writeValueAsString(userDto))
                             .characterEncoding(StandardCharsets.UTF_8)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -126,13 +126,13 @@ public class ControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.name", is("User1")))
                     .andExpect(jsonPath("$.email", is("u1@user.com")));
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Test
-    public void getAllUsersWithUserMapperDtoTest(){
+    public void getAllUsersWithUserMapperDtoTest() {
         userDto2.setId(2);
         userDto2.setName("User2");
         userDto2.setEmail("u2@user.com");
@@ -152,20 +152,20 @@ public class ControllerTest {
                     .andExpect(jsonPath("$.[1].name", is("User2")))
                     .andExpect(jsonPath("$.[1].email", is("u2@user.com")));
 
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Test
     public void deleteUserByIdTest() throws Exception {
-        mvc.perform(delete("/users/{id}",1)
+        mvc.perform(delete("/users/{id}", 1)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         Mockito
-                .verify(userService,Mockito.times(1))
+                .verify(userService, Mockito.times(1))
                 .delete(1);
     }
 
@@ -177,7 +177,7 @@ public class ControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         Mockito
-                .verify(userService,Mockito.times(1))
+                .verify(userService, Mockito.times(1))
                 .deleteAll();
     }
 

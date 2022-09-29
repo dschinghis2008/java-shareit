@@ -23,7 +23,7 @@ public class RequestDtoMappingTest {
     private final ItemRequestMapper itemRequestMapper = new ItemRequestMapper();
 
     @BeforeEach
-    public void init(){
+    public void init() {
         user1.setId(1);
         user1.setName("user1");
         user1.setEmail("u1@user.com");
@@ -55,13 +55,13 @@ public class RequestDtoMappingTest {
     }
 
     @Test
-    public void toDtoFromRequestTest(){
+    public void toDtoFromRequestTest() {
         ItemRequestDto result = itemRequestMapper.toDto(request1);
         Assertions.assertEquals(result, dto);
     }
 
     @Test
-    public void toRequestFromDtoTest(){
+    public void toRequestFromDtoTest() {
         ItemRequest result = itemRequestMapper.toItemRequest(dto, user1.getId());
         Assertions.assertNull(result.getId());
         Assertions.assertEquals(result.getDescription(), request1.getDescription());

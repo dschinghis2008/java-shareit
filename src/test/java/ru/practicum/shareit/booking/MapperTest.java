@@ -45,19 +45,19 @@ public class MapperTest {
     }
 
     @Test
-    public void fromBookingToDtoTest(){
+    public void fromBookingToDtoTest() {
         BookingDto bookingDtoResult = bookingMapper.toDto(booking1, item, user1);
         Assertions.assertEquals(bookingDtoResult, bookingDto1);
     }
 
     @Test
-    public void fromDtoToBookingTest(){
+    public void fromDtoToBookingTest() {
         Booking bookingResult = bookingMapper.toBooking(bookingDto1, user1.getId());
         Assertions.assertEquals(bookingResult, booking1);
     }
 
     @Test
-    public void fromStatusDtoToStatusTest(){
+    public void fromStatusDtoToStatusTest() {
         Status status = Status.WAITING;
         Status statusResult = bookingMapper.toStatus(StatusDto.WAITING);
         Assertions.assertEquals(statusResult, status);

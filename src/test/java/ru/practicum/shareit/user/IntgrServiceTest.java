@@ -13,7 +13,7 @@ import javax.persistence.TypedQuery;
 import java.util.Collection;
 
 @Transactional
-@SpringBootTest(properties = "db.name=test") /* ,webEnvironment = SpringBootTest.WebEnvironment.NONE)*/
+@SpringBootTest(properties = "db.name=test")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class IntgrServiceTest {
     private final EntityManager entityManager;
@@ -43,7 +43,7 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void updateUserTest(){
+    public void updateUserTest() {
         userService.add(user1);
         user2.setName("UpdUser");
         user2.setEmail("upd@user.com");
@@ -56,16 +56,16 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void getUserByIdTest(){
+    public void getUserByIdTest() {
         userService.add(user1);
         User userResult = userService.getById(1);
-        Assertions.assertEquals(userResult.getId(),1);
+        Assertions.assertEquals(userResult.getId(), 1);
         Assertions.assertEquals(userResult.getName(), user1.getName());
         Assertions.assertEquals(userResult.getEmail(), user1.getEmail());
     }
 
     @Test
-    public void getAllUsersTest(){
+    public void getAllUsersTest() {
         userService.add(user1);
         userService.add(user2);
         Collection<User> users = userService.getAll();
@@ -75,7 +75,7 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void deleteUserTest(){
+    public void deleteUserTest() {
         userService.add(user1);
         Collection<User> users = userService.getAll();
         Assertions.assertEquals(users.size(), 1);
@@ -85,7 +85,7 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void deleteAllUsers(){
+    public void deleteAllUsers() {
         userService.add(user1);
         userService.add(user2);
         Collection<User> users = userService.getAll();

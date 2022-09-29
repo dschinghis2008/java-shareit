@@ -210,7 +210,7 @@ public class RepositoryTest {
     @Test
     public void getCountOfUserBookingTest() {
 
-        int count =  bookingRepository.getCountBookingsByUser(2);
+        int count = bookingRepository.getCountBookingsByUser(2);
         Assertions.assertEquals(count, 2);
     }
 }

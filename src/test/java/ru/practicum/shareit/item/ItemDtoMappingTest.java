@@ -12,7 +12,7 @@ public class ItemDtoMappingTest {
     private final ItemDto itemDto = new ItemDto();
 
     @BeforeEach
-    public void init(){
+    public void init() {
         item.setId(1);
         item.setOwner(1);
         item.setAvailable(true);
@@ -27,13 +27,13 @@ public class ItemDtoMappingTest {
     }
 
     @Test
-    public void toDtoFromItemTest(){
+    public void toDtoFromItemTest() {
         ItemDto result = itemMapper.toDto(item);
         Assertions.assertEquals(result, itemDto);
     }
 
     @Test
-    public void toItemFromDtoTest(){
+    public void toItemFromDtoTest() {
         Item result = itemMapper.toItem(itemDto, 1, 1);
         Assertions.assertEquals(result, item);
     }

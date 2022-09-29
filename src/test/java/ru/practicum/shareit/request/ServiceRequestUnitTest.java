@@ -70,7 +70,7 @@ public class ServiceRequestUnitTest {
     }
 
     @Test
-    public void addRequestTest(){
+    public void addRequestTest() {
         Mockito
                 .when(itemRequestRepository.save(Mockito.any(ItemRequest.class)))
                 .thenReturn(itemRequest);
@@ -82,7 +82,7 @@ public class ServiceRequestUnitTest {
     }
 
     @Test
-    public void addRequestTestWithInvalidRequestorId(){
+    public void addRequestTestWithInvalidRequestorId() {
         user2.setId(99);
         Mockito
                 .when(userRepository.findById(99))
@@ -91,7 +91,7 @@ public class ServiceRequestUnitTest {
     }
 
     @Test
-    public void getAllOwnRequestsTest(){
+    public void getAllOwnRequestsTest() {
         Mockito
                 .when(itemRequestRepository.getRequestsByRequestor(Mockito.anyInt()))
                 .thenReturn(List.of(itemRequest));
@@ -100,7 +100,7 @@ public class ServiceRequestUnitTest {
     }
 
     @Test
-    public void getByIdRequestTest(){
+    public void getByIdRequestTest() {
         Mockito
                 .when(itemRequestRepository.findById(Mockito.anyInt()))
                 .thenReturn(Optional.of(itemRequest));
@@ -109,7 +109,7 @@ public class ServiceRequestUnitTest {
     }
 
     @Test
-    public void getAllRequestsTest(){
+    public void getAllRequestsTest() {
         List<ItemRequest> list = List.of(itemRequest);
         Pageable pageable = PageRequest.of(0, 1);
         Page<ItemRequest> page = new PageImpl<>(list, pageable, list.size());
@@ -117,7 +117,7 @@ public class ServiceRequestUnitTest {
                 .when(itemRequestRepository.getAll(Mockito.anyInt(), Mockito.any(Pageable.class)))
                 .thenReturn(page);
         Collection<ItemRequest> list1 =
-                itemRequestRepository.getAll(2,PageRequest.of(0,10)).getContent();
+                itemRequestRepository.getAll(2, PageRequest.of(0, 10)).getContent();
         Assertions.assertEquals(list1.size(), 1);
     }
 

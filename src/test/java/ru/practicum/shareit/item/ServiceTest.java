@@ -191,8 +191,8 @@ public class ServiceTest {
                 .when(commentRepository.findAllByItem(Mockito.anyInt()))
                 .thenReturn(Set.of(comment));
         Mockito
-                .when(commentMapper.toDto(Mockito.any(Comment.class),Mockito.any(User.class)))
-                        .thenReturn(commentDto);
+                .when(commentMapper.toDto(Mockito.any(Comment.class), Mockito.any(User.class)))
+                .thenReturn(commentDto);
 
         Mockito
                 .when(bookingRepository.getLastBooking(1, LocalDateTime.now().withNano(0)))
@@ -208,10 +208,10 @@ public class ServiceTest {
     }
 
     @Test
-    public void addCommentTest(){
+    public void addCommentTest() {
         Mockito
                 .when(bookingRepository.getByBookerAndItem(Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(List.of(booking1,booking2));
+                .thenReturn(List.of(booking1, booking2));
         Mockito
                 .when(commentRepository.save(comment))
                 .thenReturn(comment);
@@ -229,7 +229,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void getUserTest(){
+    public void getUserTest() {
         Mockito
                 .when(userRepository.findById(Mockito.anyInt()))
                 .thenReturn(Optional.of(user2));
@@ -238,10 +238,10 @@ public class ServiceTest {
     }
 
     @Test
-    public void deleteItemTest(){
+    public void deleteItemTest() {
         itemService.delete(1, 1);
         Mockito
-                .verify(itemRepository,Mockito.times(1))
+                .verify(itemRepository, Mockito.times(1))
                 .deleteById(1);
     }
 

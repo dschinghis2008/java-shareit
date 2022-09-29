@@ -86,23 +86,23 @@ public class ServiceTest {
     }
 
     @Test
-    public void deleteUserByIdTest(){
+    public void deleteUserByIdTest() {
         userService.delete(1);
         Mockito
-                .verify(userRepository,Mockito.times(1))
+                .verify(userRepository, Mockito.times(1))
                 .deleteById(1);
     }
 
     @Test
-    public void deleteAllUsersTest(){
+    public void deleteAllUsersTest() {
         userService.deleteAll();
         Mockito
-                .verify(userRepository,Mockito.times(1))
+                .verify(userRepository, Mockito.times(1))
                 .deleteAll();
     }
 
     @Test
-    public void getUserWithInvalidId(){
+    public void getUserWithInvalidId() {
         Mockito
                 .when(userRepository.findById(99))
                 .thenReturn(null);

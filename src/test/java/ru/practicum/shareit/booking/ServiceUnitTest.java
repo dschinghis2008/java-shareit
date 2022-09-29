@@ -171,7 +171,7 @@ public class ServiceUnitTest {
                 .thenReturn(Optional.of(item));
         Mockito
                 .when(bookingMapper.toDto(booking1, item, user2))
-                        .thenReturn(bookingDto1);
+                .thenReturn(bookingDto1);
         Mockito
                 .when(bookingMapper.toDto(booking2, item, user2))
                 .thenReturn(bookingDto2);
@@ -188,7 +188,7 @@ public class ServiceUnitTest {
 
         Mockito
                 .when(bookingMapper.toStatus(Mockito.any(StatusDto.class)))
-                        .thenReturn(Status.WAITING);
+                .thenReturn(Status.WAITING);
         Mockito
                 .when(bookingRepository.getBookingsByUserAndStatus(Mockito.anyInt(), Mockito.any(Status.class),
                         Mockito.any(Pageable.class)))

@@ -20,14 +20,14 @@ public class RepositoryTest {
     private User user2 = new User();
 
     @Test
-    public void getUserByEmailTest(){
+    public void getUserByEmailTest() {
         user1.setName("user1");
         user1.setEmail("u1@user.com");
         entityManager.persist(user1);
 
         TypedQuery<User> query = entityManager.getEntityManager()
                 .createQuery("select u from User u where u.email = :email", User.class);
-        user2 = query.setParameter("email",user1.getEmail()).getSingleResult();
+        user2 = query.setParameter("email", user1.getEmail()).getSingleResult();
         Assertions.assertEquals(user1.getName(), user2.getName());
         Assertions.assertEquals(user1.getEmail(), user2.getEmail());
     }

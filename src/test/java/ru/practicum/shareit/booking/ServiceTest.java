@@ -82,7 +82,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void addBookingTest(){
+    public void addBookingTest() {
         userService.add(user1);
         userService.add(user2);
         itemService.add(item);
@@ -91,24 +91,24 @@ public class ServiceTest {
     }
 
     @Test
-    public void addBookingWithInvalidUserTest(){
+    public void addBookingWithInvalidUserTest() {
         Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.add(bookingDto1, 99));
     }
 
     @Test
-    public void addBookingWithInvalidItemTest(){
+    public void addBookingWithInvalidItemTest() {
         bookingDto1.setItemId(99);
         Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.add(bookingDto1, user2.getId()));
     }
 
     @Test
-    public void addBookingWhenBookerIsOwnerOfItemTest(){
+    public void addBookingWhenBookerIsOwnerOfItemTest() {
         bookingDto1.setUserId(user1.getId());
         Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.add(bookingDto1, user1.getId()));
     }
 
     @Test
-    public void updateApproveBookingTest(){
+    public void updateApproveBookingTest() {
         userService.add(user1);
         userService.add(user2);
         itemService.add(item);
@@ -121,7 +121,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void updateApproveBookingWhenUpdaterIsNotOwnerOfItemTest(){
+    public void updateApproveBookingWhenUpdaterIsNotOwnerOfItemTest() {
         userService.add(user1);
         userService.add(user2);
         itemService.add(item);
@@ -131,7 +131,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void findBookingByIdTest(){
+    public void findBookingByIdTest() {
         userService.add(user1);
         userService.add(user2);
         itemService.add(item);
@@ -141,7 +141,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void findAllBookingByUser(){
+    public void findAllBookingByUser() {
         userService.add(user1);
         userService.add(user2);
         itemService.add(item);
@@ -160,7 +160,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void findAllBookingByOwner(){
+    public void findAllBookingByOwner() {
         userService.add(user1);
         userService.add(user2);
         itemService.add(item);

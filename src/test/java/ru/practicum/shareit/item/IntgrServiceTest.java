@@ -96,15 +96,15 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void addItemWithAbsencedUserTest(){
-        Assertions.assertThrows(ResponseStatusException.class, ()-> itemService.add(item1));
+    public void addItemWithAbsencedUserTest() {
+        Assertions.assertThrows(ResponseStatusException.class, () -> itemService.add(item1));
     }
 
     @Test
-    public void addItemWithInvalidFieldsTest(){
+    public void addItemWithInvalidFieldsTest() {
         userService.add(user1);
         item1.setAvailable(null);
-        Assertions.assertThrows(ResponseStatusException.class, ()-> itemService.add(item1));
+        Assertions.assertThrows(ResponseStatusException.class, () -> itemService.add(item1));
     }
 
     @Test
@@ -138,11 +138,11 @@ public class IntgrServiceTest {
         item.setDescription("updDesc");
         item.setOwner(2);
         item.setAvailable(true);
-        Assertions.assertThrows(ResponseStatusException.class, ()-> itemService.update(item, user2.getId()));
+        Assertions.assertThrows(ResponseStatusException.class, () -> itemService.update(item, user2.getId()));
     }
 
     @Test
-    public void findByIdItemTest(){
+    public void findByIdItemTest() {
         userService.add(user1);
         itemService.add(item1);
         Item itemResult = itemService.getById(item1.getId());
@@ -154,7 +154,7 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void getItemByNameOrDescriptionTest(){
+    public void getItemByNameOrDescriptionTest() {
         Item item2 = new Item();
         item2.setId(2);
         item2.setName("item2");
@@ -171,7 +171,7 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void getAllItemsByOwnerTest(){
+    public void getAllItemsByOwnerTest() {
         Item item2 = new Item();
         item2.setId(2);
         item2.setName("item2");
@@ -191,7 +191,7 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void addCommentTest(){
+    public void addCommentTest() {
         userService.add(user1);
         userService.add(user2);
         itemService.add(item1);
@@ -201,7 +201,7 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void getItemWithDateBookingTest(){
+    public void getItemWithDateBookingTest() {
         userService.add(user1);
         userService.add(user2);
         itemService.add(item1);
@@ -217,14 +217,14 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void getUserTest(){
+    public void getUserTest() {
         userService.add(user1);
         User userResult = userService.getById(user1.getId());
         Assertions.assertEquals(userResult, user1);
     }
 
     @Test
-    public void deleteItemTest(){
+    public void deleteItemTest() {
         userService.add(user1);
         itemService.add(item1);
         Assertions.assertEquals(itemService.getById(1), item1);

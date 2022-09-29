@@ -65,13 +65,13 @@ public class RequestRepositoryTest {
     }
 
     @Test
-    public void addRequestTest(){
+    public void addRequestTest() {
         Optional<ItemRequest> itemRequestResult = Optional.of(itemRequestRepository.save(request2));
         Assertions.assertEquals(itemRequestResult, Optional.of(request2));
     }
 
     @Test
-    public void getAllOwnRequestsTest(){
+    public void getAllOwnRequestsTest() {
         Collection<ItemRequest> itemRequests = itemRequestRepository.getRequestsByRequestor(1);
         Assertions.assertEquals(itemRequests.size(), 2);
         Assertions.assertEquals(itemRequests.toArray()[0], request1);
@@ -79,7 +79,7 @@ public class RequestRepositoryTest {
     }
 
     @Test
-    public void getAllRequestsTest(){
+    public void getAllRequestsTest() {
         Pageable pageable = PageRequest.of(0, 10);
         Collection<ItemRequest> itemRequests = itemRequestRepository.getAll(2, pageable).getContent();
         Assertions.assertEquals(itemRequests.size(), 2);
