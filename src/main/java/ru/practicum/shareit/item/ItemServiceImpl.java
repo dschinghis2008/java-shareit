@@ -118,8 +118,8 @@ public class ItemServiceImpl implements ItemService {
     public ItemDtoDate getItemDate(Integer itemId, LocalDateTime dateTime, Integer userId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Booking bookingLast = bookingRepository.getLastBooking(itemId, LocalDateTime.now().withNano(0));
-        Booking bookNext = bookingRepository.getNextBooking(itemId, LocalDateTime.now());
+        Booking bookingLast = bookingRepository.getLastBooking(itemId, dateTime);
+        Booking bookingNext = bookingRepository.getNextBooking(itemId, dateTime);
         Set<Comment> comments = commentRepository.findAllByItem(itemId);
         Set<CommentDto> commentsDto = new HashSet<>();
         for (Comment comment : comments) {
@@ -134,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
         itemDtoDate.setOwner(item.getOwner());
         if (item.getOwner().equals(userId)) {
             itemDtoDate.setLastBooking(bookingLast);
-            itemDtoDate.setNextBooking(bookNext);
+            itemDtoDate.setNextBooking(bookingNext);
         }
         if (comments.size() > 0) {
             itemDtoDate.setComments(commentsDto);
@@ -155,7 +155,8 @@ public class ItemServiceImpl implements ItemService {
                 bookingRepository.getByBookerAndItem(comment.getAuthor(), comment.getItem());
         for (Booking booking : bookings) {
             log.info("booking >>>>>>>>> = {}", booking);
-            if (booking != null && booking.getEnd().isBefore(LocalDateTime.now()) && !comment.getText().equals("")) {
+            if (booking != null && booking.getEnd().isBefore(LocalDateTime.now())
+                    && !comment.getText().equals("")) {
                 log.info("добавлен отзыв /{}/", comment);
                 commentRepository.save(comment);
                 return commentMapper.toDto(comment, user);

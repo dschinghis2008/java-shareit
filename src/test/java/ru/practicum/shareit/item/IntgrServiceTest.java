@@ -64,15 +64,15 @@ public class IntgrServiceTest {
         user2.setEmail("u2@user.com");
 
         booking1.setId(1);
-        booking1.setStart(LocalDateTime.now().plusHours(1));
-        booking1.setEnd(LocalDateTime.now().minusHours(2));
+        booking1.setStart(LocalDateTime.now().plusDays(1).withNano(0));
+        booking1.setEnd(LocalDateTime.now().plusDays(2).withNano(0));
         booking1.setItemId(1);
         booking1.setUserId(2);
         booking1.setStatus(Status.APPROVED);
 
         booking2.setId(2);
-        booking2.setStart(LocalDateTime.now().plusHours(2));
-        booking2.setEnd(LocalDateTime.now().plusHours(4));
+        booking2.setStart(LocalDateTime.now().plusDays(3).withNano(0));
+        booking2.setEnd(LocalDateTime.now().plusDays(4).withNano(0));
         booking2.setItemId(1);
         booking2.setUserId(2);
         booking2.setStatus(Status.APPROVED);
@@ -196,6 +196,7 @@ public class IntgrServiceTest {
         userService.add(user2);
         itemService.add(item1);
         bookingService.add(booking1, 2);
+        bookingService.updBookingDate(1, LocalDateTime.now().minusDays(5));
         CommentDto commentDtoResult = itemService.addComment(commentDto, 1, 2);
         Assertions.assertEquals(commentDtoResult.getId(), 1);
     }
@@ -207,8 +208,11 @@ public class IntgrServiceTest {
         itemService.add(item1);
         bookingService.add(booking1, 2);
         bookingService.add(booking2, 2);
+        bookingService.updBookingDate(1, LocalDateTime.now().minusDays(20));
+        bookingService.updBookingDate(2, LocalDateTime.now().minusDays(10));
+
         itemService.addComment(commentDto, 1, 2);
-        ItemDtoDate itemDtoDate = itemService.getItemDate(1, LocalDateTime.now(), 2);
+        ItemDtoDate itemDtoDate = itemService.getItemDate(1, LocalDateTime.now().minusDays(15), 2);
         Assertions.assertEquals(itemDtoDate.getId(), 1);
         Assertions.assertEquals(itemDtoDate.getName(), item1.getName());
         Assertions.assertEquals(itemDtoDate.getDescription(), item1.getDescription());

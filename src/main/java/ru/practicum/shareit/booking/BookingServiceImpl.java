@@ -45,7 +45,9 @@ public class BookingServiceImpl implements BookingService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        if (booking.getStart().isBefore(LocalDateTime.now())) {
+        if (booking.getStart().isBefore(LocalDateTime.now())
+                || booking.getEnd().isBefore(LocalDateTime.now())
+                || booking.getEnd().isBefore(booking.getStart())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         if (itemRepository.findById(booking.getItem()).orElseThrow().getOwner().equals(ownerId)) {
@@ -264,5 +266,12 @@ public class BookingServiceImpl implements BookingService {
         checkValidUser(userId);
         log.info("запрошены бронирования вещей владельца /{}/ state=CURRENT", userId);
         return bookingRepository.getByOwnerCurrent(userId, LocalDateTime.now(), PageRequest.of(page, size)).toList();
+    }
+
+    public void updBookingDate(Integer id, LocalDateTime dateTime){
+        Booking upd = bookingRepository.findById(id).orElseThrow();
+        upd.setStart(dateTime);
+        upd.setEnd(dateTime.plusDays(2));
+        bookingRepository.save(upd);
     }
 }
