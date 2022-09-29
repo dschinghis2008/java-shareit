@@ -30,15 +30,15 @@ public class MapperTest {
         bookingDto1.setId(1);
         bookingDto1.setItemId(item.getId());
         bookingDto1.setUserId(user1.getId());
-        bookingDto1.setStart(LocalDateTime.now().plusHours(1));
-        bookingDto1.setEnd(LocalDateTime.now().plusHours(2));
+        bookingDto1.setStart(LocalDateTime.now().plusHours(1).withNano(0));
+        bookingDto1.setEnd(LocalDateTime.now().plusHours(2).withNano(0));
         bookingDto1.setStatus(Status.WAITING);
         bookingDto1.setBooker(user1);
         bookingDto1.setItem(item);
 
         booking1.setId(1);
-        booking1.setStart(LocalDateTime.now().plusHours(1));
-        booking1.setEnd(LocalDateTime.now().plusHours(2));
+        booking1.setStart(LocalDateTime.now().plusHours(1).withNano(0));
+        booking1.setEnd(LocalDateTime.now().plusHours(2).withNano(0));
         booking1.setBookerId(user1.getId());
         booking1.setItem(item.getId());
         booking1.setStatus(Status.WAITING);
