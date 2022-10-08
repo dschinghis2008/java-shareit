@@ -87,108 +87,136 @@ public class ControllerRequestTest {
     }
 
     @Test
-    public void addRequestTest() {
+    public void addRequestCheckStatusIsOkTest() throws Exception {
         when(itemRequestService.add(Mockito.any(ItemRequest.class)))
                 .thenReturn(itemRequest);
-        try {
-            mockMvc.perform(post("/requests")
-                            .content(objectMapper.writeValueAsString(itemRequestMapper.toDto(itemRequest)))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .header("X-Sharer-User-Id", 2))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.id", is(itemRequestDto.getId()), Integer.class))
-                    .andExpect(jsonPath("$.description", is(itemRequestDto.getDescription())))
-                    .andExpect(jsonPath("$.requestor", is(itemRequestDto.getRequestor()), User.class))
-                    .andExpect(jsonPath("$.items", is(Matchers.notNullValue())));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mockMvc.perform(post("/requests")
+                        .content(objectMapper.writeValueAsString(itemRequestMapper.toDto(itemRequest)))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2))
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    public void addRequestWithInvalidDescriptionTest() {
+    public void addRequestCheckJsonTest() throws Exception {
+        when(itemRequestService.add(Mockito.any(ItemRequest.class)))
+                .thenReturn(itemRequest);
+        mockMvc.perform(post("/requests")
+                        .content(objectMapper.writeValueAsString(itemRequestMapper.toDto(itemRequest)))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2))
+                .andExpect(jsonPath("$.id", is(itemRequestDto.getId()), Integer.class))
+                .andExpect(jsonPath("$.description", is(itemRequestDto.getDescription())))
+                .andExpect(jsonPath("$.requestor", is(itemRequestDto.getRequestor()), User.class))
+                .andExpect(jsonPath("$.items", is(Matchers.notNullValue())));
+
+    }
+
+    @Test
+    public void addRequestWithInvalidDescriptionTest() throws Exception {
         itemRequest.setDescription("");
         when(itemRequestService.add(Mockito.any(ItemRequest.class)))
                 .thenReturn(itemRequest);
-        try {
-            mockMvc.perform(post("/requests")
-                            .content(objectMapper.writeValueAsString(itemRequestMapper.toDto(itemRequest)))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .header("X-Sharer-User-Id", 2))
-                    .andExpect(status().isBadRequest());
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mockMvc.perform(post("/requests")
+                        .content(objectMapper.writeValueAsString(itemRequestMapper.toDto(itemRequest)))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void getAllOwnTest() {
+    public void getAllOwnCheckStatusIsOkTest() throws Exception {
         when(itemRequestService.getAllOwn(Mockito.anyInt()))
                 .thenReturn(List.of(itemRequest));
-        try {
-            mockMvc.perform(get("/requests")
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .header("X-Sharer-User-Id", 2))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.*", is(hasSize(1))))
-                    .andExpect(jsonPath("$.[0].id", is(itemRequestDto.getId()), Integer.class))
-                    .andExpect(jsonPath("$.[0].description", is(itemRequestDto.getDescription())))
-                    .andExpect(jsonPath("$.[0].requestor", is(itemRequestDto.getRequestor()), User.class))
-                    .andExpect(jsonPath("$.[0].created", is(Matchers.notNullValue())))
-                    .andExpect(jsonPath("$.[0].items", is(Matchers.notNullValue())));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mockMvc.perform(get("/requests")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void getByRequestIdTest() {
+    public void getAllOwnCheckJsonTest() throws Exception {
+        when(itemRequestService.getAllOwn(Mockito.anyInt()))
+                .thenReturn(List.of(itemRequest));
+        mockMvc.perform(get("/requests")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2))
+                .andExpect(jsonPath("$.*", is(hasSize(1))))
+                .andExpect(jsonPath("$.[0].id", is(itemRequestDto.getId()), Integer.class))
+                .andExpect(jsonPath("$.[0].description", is(itemRequestDto.getDescription())))
+                .andExpect(jsonPath("$.[0].requestor", is(itemRequestDto.getRequestor()), User.class))
+                .andExpect(jsonPath("$.[0].created", is(Matchers.notNullValue())))
+                .andExpect(jsonPath("$.[0].items", is(Matchers.notNullValue())));
+    }
+
+    @Test
+    public void getByRequestIdCheckStatusIsOkTest() throws Exception {
         when(itemRequestService.getById(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(itemRequest);
-        try {
-            mockMvc.perform(get("/requests/{requestId}", 1)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .header("X-Sharer-User-Id", 2))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.id", is(itemRequestDto.getId()), Integer.class))
-                    .andExpect(jsonPath("$.description", is(itemRequestDto.getDescription())))
-                    .andExpect(jsonPath("$.requestor", is(itemRequestDto.getRequestor()), User.class))
-                    .andExpect(jsonPath("$.created", is(Matchers.notNullValue())))
-                    .andExpect(jsonPath("$.items", is(Matchers.notNullValue())));
+        mockMvc.perform(get("/requests/{requestId}", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2))
+                .andExpect(status().isOk());
 
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
     }
 
     @Test
-    public void getAllRequestsTest() {
+    public void getByRequestIdCheckJsonTest() throws Exception {
+        when(itemRequestService.getById(Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(itemRequest);
+        mockMvc.perform(get("/requests/{requestId}", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2))
+                .andExpect(jsonPath("$.id", is(itemRequestDto.getId()), Integer.class))
+                .andExpect(jsonPath("$.description", is(itemRequestDto.getDescription())))
+                .andExpect(jsonPath("$.requestor", is(itemRequestDto.getRequestor()), User.class))
+                .andExpect(jsonPath("$.created", is(Matchers.notNullValue())))
+                .andExpect(jsonPath("$.items", is(Matchers.notNullValue())));
+
+    }
+
+    @Test
+    public void getAllRequestsCheckStatusIsOkTest() throws Exception {
         when(itemRequestService.getAll(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(List.of(itemRequest));
-        try {
-            mockMvc.perform(get("/requests/all")
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .header("X-Sharer-User-Id", 2))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.*", is(hasSize(1))))
-                    .andExpect(jsonPath("$.[0].id", is(itemRequestDto.getId()), Integer.class))
-                    .andExpect(jsonPath("$.[0].description", is(itemRequestDto.getDescription())))
-                    .andExpect(jsonPath("$.[0].requestor", is(itemRequestDto.getRequestor()), User.class))
-                    .andExpect(jsonPath("$.[0].created", is(Matchers.notNullValue())))
-                    .andExpect(jsonPath("$.[0].items", is(Matchers.notNullValue())));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mockMvc.perform(get("/requests/all")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAllRequestsCheckJsonTest() throws Exception {
+        when(itemRequestService.getAll(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(List.of(itemRequest));
+        mockMvc.perform(get("/requests/all")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2))
+                .andExpect(jsonPath("$.*", is(hasSize(1))))
+                .andExpect(jsonPath("$.[0].id", is(itemRequestDto.getId()), Integer.class))
+                .andExpect(jsonPath("$.[0].description", is(itemRequestDto.getDescription())))
+                .andExpect(jsonPath("$.[0].requestor", is(itemRequestDto.getRequestor()), User.class))
+                .andExpect(jsonPath("$.[0].created", is(Matchers.notNullValue())))
+                .andExpect(jsonPath("$.[0].items", is(Matchers.notNullValue())));
     }
 
 

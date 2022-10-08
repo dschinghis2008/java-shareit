@@ -52,21 +52,29 @@ public class ControllerTest {
     }
 
     @Test
-    public void addUserTest() {
+    public void addUserCheckStatusIsOkTest() throws Exception {
         when(userService.add(Mockito.any(User.class)))
                 .thenReturn(user);
-        try {
-            mvc.perform(post("/users")
-                            .content(objectMapper.writeValueAsString(userDto))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name", is("User1")))
-                    .andExpect(jsonPath("$.email", is("u1@user.com")));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mvc.perform(post("/users")
+                        .content(objectMapper.writeValueAsString(userDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void addUserCheckJsonTest() throws Exception {
+        when(userService.add(Mockito.any(User.class)))
+                .thenReturn(user);
+        mvc.perform(post("/users")
+                        .content(objectMapper.writeValueAsString(userDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is("User1")))
+                .andExpect(jsonPath("$.email", is("u1@user.com")));
 
     }
 
@@ -93,68 +101,96 @@ public class ControllerTest {
     }
 
     @Test
-    public void updateUserWithUserMapperDtoTest() {
+    public void updateUserWithUserMapperDtoCheckJsonTest() throws Exception {
         userDto.setName("UpdUser");
         userDto.setEmail("upd@user.com");
         user = userMapper.toUser(userDto);
         when(userService.update(Mockito.any(User.class), Mockito.anyInt()))
                 .thenReturn(user);
-        try {
-            mvc.perform(patch("/users/{id}", userDto.getId())
-                            .content(objectMapper.writeValueAsString(userDto))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name", is("UpdUser")))
-                    .andExpect(jsonPath("$.email", is("upd@user.com")));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mvc.perform(patch("/users/{id}", userDto.getId())
+                        .content(objectMapper.writeValueAsString(userDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is("UpdUser")))
+                .andExpect(jsonPath("$.email", is("upd@user.com")));
     }
 
     @Test
-    public void getUserByIdTest() {
+    public void updateUserWithUserMapperDtoCheckStatusIsOkTest() throws Exception {
+        userDto.setName("UpdUser");
+        userDto.setEmail("upd@user.com");
+        user = userMapper.toUser(userDto);
+        when(userService.update(Mockito.any(User.class), Mockito.anyInt()))
+                .thenReturn(user);
+        mvc.perform(patch("/users/{id}", userDto.getId())
+                        .content(objectMapper.writeValueAsString(userDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getUserByIdCheckStatusIsOkTest() throws Exception {
         when(userService.getById(Mockito.anyInt()))
                 .thenReturn(user);
-        try {
-            mvc.perform(get("/users/{id}", userDto.getId())
-                            .content(objectMapper.writeValueAsString(userDto))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name", is("User1")))
-                    .andExpect(jsonPath("$.email", is("u1@user.com")));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mvc.perform(get("/users/{id}", userDto.getId())
+                        .content(objectMapper.writeValueAsString(userDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void getAllUsersWithUserMapperDtoTest() {
+    public void getUserByIdCheckJsonTest() throws Exception {
+        when(userService.getById(Mockito.anyInt()))
+                .thenReturn(user);
+        mvc.perform(get("/users/{id}", userDto.getId())
+                        .content(objectMapper.writeValueAsString(userDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is("User1")))
+                .andExpect(jsonPath("$.email", is("u1@user.com")));
+    }
+
+    @Test
+    public void getAllUsersWithUserMapperDtoCheckStatusIsOkTest() throws Exception {
         userDto2.setId(2);
         userDto2.setName("User2");
         userDto2.setEmail("u2@user.com");
         User user2 = userMapper.toUser(userDto2);
         when(userService.getAll())
                 .thenReturn(List.of(user, user2));
-        try {
-            mvc.perform(get("/users")
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.[0].id", is(1)))
-                    .andExpect(jsonPath("$.[0].name", is("User1")))
-                    .andExpect(jsonPath("$.[0].email", is("u1@user.com")))
-                    .andExpect(jsonPath("$.[1].id", is(2)))
-                    .andExpect(jsonPath("$.[1].name", is("User2")))
-                    .andExpect(jsonPath("$.[1].email", is("u2@user.com")));
+        mvc.perform(get("/users")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    }
+
+    @Test
+    public void getAllUsersWithUserMapperDtoCheckJsonTest() throws Exception {
+        userDto2.setId(2);
+        userDto2.setName("User2");
+        userDto2.setEmail("u2@user.com");
+        User user2 = userMapper.toUser(userDto2);
+        when(userService.getAll())
+                .thenReturn(List.of(user, user2));
+        mvc.perform(get("/users")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.[0].id", is(1)))
+                .andExpect(jsonPath("$.[0].name", is("User1")))
+                .andExpect(jsonPath("$.[0].email", is("u1@user.com")))
+                .andExpect(jsonPath("$.[1].id", is(2)))
+                .andExpect(jsonPath("$.[1].name", is("User2")))
+                .andExpect(jsonPath("$.[1].email", is("u2@user.com")));
+
     }
 
     @Test

@@ -85,110 +85,173 @@ public class ControllerTest {
     }
 
     @Test
-    public void addItemTest() {
+    public void addItemCheckJsonContentTest() throws Exception {
         item = itemMapper.toItem(itemDto1, 1, null);
         when(itemService.add(Mockito.any(Item.class)))
                 .thenReturn(item);
 
-        try {
-            mvc.perform(post("/items")
-                            .content(objectMapper.writeValueAsString(itemDto1))
-                            .header("X-Sharer-User-Id", 1)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name", is(item.getName())))
-                    .andExpect(jsonPath("$.description", is(item.getDescription())))
-                    .andExpect(jsonPath("$.available", is(item.getAvailable())))
-                    .andExpect(jsonPath("$.owner", is(item.getOwner())));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mvc.perform(post("/items")
+                        .content(objectMapper.writeValueAsString(itemDto1))
+                        .header("X-Sharer-User-Id", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is(item.getName())))
+                .andExpect(jsonPath("$.description", is(item.getDescription())))
+                .andExpect(jsonPath("$.available", is(item.getAvailable())))
+                .andExpect(jsonPath("$.owner", is(item.getOwner())));
     }
 
     @Test
-    public void updateItemTest() {
+    public void addItemCheckSatusIsOkTest() throws Exception {
+        item = itemMapper.toItem(itemDto1, 1, null);
+        when(itemService.add(Mockito.any(Item.class)))
+                .thenReturn(item);
+
+        mvc.perform(post("/items")
+                        .content(objectMapper.writeValueAsString(itemDto1))
+                        .header("X-Sharer-User-Id", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateItemCheckStatusIsOkTest() throws Exception {
         itemDto1.setId(1);
         itemDto1.setName("updItem");
         itemDto1.setDescription("descr of updItem");
         item = itemMapper.toItem(itemDto1, user1.getId(), itemDto1.getId());
         when(itemService.update(Mockito.any(Item.class), Mockito.anyInt()))
                 .thenReturn(item);
-        try {
-            mvc.perform(patch("/items/{id}", itemDto1.getId())
-                            .content(objectMapper.writeValueAsString(itemDto1))
-                            .header("X-Sharer-User-Id", 1)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name", is(item.getName())))
-                    .andExpect(jsonPath("$.description", is(item.getDescription())))
-                    .andExpect(jsonPath("$.available", is(item.getAvailable())))
-                    .andExpect(jsonPath("$.owner", is(item.getOwner())));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+
+        mvc.perform(patch("/items/{id}", itemDto1.getId())
+                        .content(objectMapper.writeValueAsString(itemDto1))
+                        .header("X-Sharer-User-Id", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    public void getItemByIdTest() {
+    public void updateItemCheckJsonContentTest() throws Exception {
+        itemDto1.setId(1);
+        itemDto1.setName("updItem");
+        itemDto1.setDescription("descr of updItem");
+        item = itemMapper.toItem(itemDto1, user1.getId(), itemDto1.getId());
+        when(itemService.update(Mockito.any(Item.class), Mockito.anyInt()))
+                .thenReturn(item);
+
+        mvc.perform(patch("/items/{id}", itemDto1.getId())
+                        .content(objectMapper.writeValueAsString(itemDto1))
+                        .header("X-Sharer-User-Id", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is(item.getName())))
+                .andExpect(jsonPath("$.description", is(item.getDescription())))
+                .andExpect(jsonPath("$.available", is(item.getAvailable())))
+                .andExpect(jsonPath("$.owner", is(item.getOwner())));
+
+    }
+
+    @Test
+    public void getItemByIdCheckStatusIsOkTest() throws Exception {
         when(itemService.getItemDate(Mockito.anyInt(), Mockito.any(LocalDateTime.class), Mockito.anyInt()))
                 .thenReturn(itemDtoDate1);
-        try {
-            mvc.perform(get("/items/{itemId}", 1)
-                            .header("X-Sharer-User-Id", 1)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(content().json(objectMapper.writeValueAsString(itemDtoDate1)));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+
+        mvc.perform(get("/items/{itemId}", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    public void getAllItemsByOwnerTest() {
+    public void getItemByIdCheckJsonContentTest() throws Exception {
+        when(itemService.getItemDate(Mockito.anyInt(), Mockito.any(LocalDateTime.class), Mockito.anyInt()))
+                .thenReturn(itemDtoDate1);
+
+        mvc.perform(get("/items/{itemId}", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(itemDtoDate1)));
+
+    }
+
+    @Test
+    public void getAllItemsByOwnerCheckStatusIsOkTest() throws Exception {
         when(itemService.getAll(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(List.of(itemDtoDate1, itemDtoDate2));
-        try {
-            mvc.perform(get("/items")
-                            .header("X-Sharer-User-Id", 1)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(content().json(objectMapper.writeValueAsString(List.of(itemDtoDate1, itemDtoDate2))));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+
+        mvc.perform(get("/items")
+                        .header("X-Sharer-User-Id", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    public void getByNameOrDescItemTest() {
+    public void getAllItemsByOwnerCheckJsonTest() throws Exception {
+        when(itemService.getAll(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(List.of(itemDtoDate1, itemDtoDate2));
+
+        mvc.perform(get("/items")
+                        .header("X-Sharer-User-Id", 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(itemDtoDate1, itemDtoDate2))));
+
+    }
+
+    @Test
+    public void getByNameOrDescItemCheckSatusIsOkTest() throws Exception {
         item = itemMapper.toItem(itemDto1, 1, null);
         Item item2 = itemMapper.toItem(itemDto2, 1, null);
         when(itemService.getByNameOrDesc(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(List.of(item, item2));
-        try {
-            String strSearch = "DESCR";
-            mvc.perform(get("/items/search")
-                            .header("X-Sharer-User-Id", 1)
-                            .param("text", strSearch)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(content().json(objectMapper.writeValueAsString(List.of(item, item2))));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+
+        String strSearch = "DESCR";
+        mvc.perform(get("/items/search")
+                        .header("X-Sharer-User-Id", 1)
+                        .param("text", strSearch)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    public void addCommentTest() {
+    public void getByNameOrDescItemCheckJsonTest() throws Exception {
+        item = itemMapper.toItem(itemDto1, 1, null);
+        Item item2 = itemMapper.toItem(itemDto2, 1, null);
+        when(itemService.getByNameOrDesc(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(List.of(item, item2));
+
+        String strSearch = "DESCR";
+        mvc.perform(get("/items/search")
+                        .header("X-Sharer-User-Id", 1)
+                        .param("text", strSearch)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(item, item2))));
+
+    }
+
+    @Test
+    public void addCommentCheckStatusIsOkTest() throws Exception {
         Comment comment = new Comment();
         comment.setId(1);
         comment.setAuthor(1);
@@ -197,21 +260,39 @@ public class ControllerTest {
         CommentDto commentDto = commentMapper.toDto(comment, user1);
         when(itemService.addComment(Mockito.any(CommentDto.class), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(commentDto);
-        try {
-            mvc.perform(post("/items/{itemId}/comment", 1)
-                            .header("X-Sharer-User-Id", 1)
-                            .content(objectMapper.writeValueAsString(commentDto))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.id", is(comment.getId())))
-                    .andExpect(jsonPath("$.author", is(comment.getAuthor())))
-                    .andExpect(jsonPath("$.item", is(comment.getItem())))
-                    .andExpect(jsonPath("$.text", is(comment.getText())));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+
+        mvc.perform(post("/items/{itemId}/comment", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .content(objectMapper.writeValueAsString(commentDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void addCommentCheckJsonTest() throws Exception {
+        Comment comment = new Comment();
+        comment.setId(1);
+        comment.setAuthor(1);
+        comment.setItem(1);
+        comment.setText("comment about item1");
+        CommentDto commentDto = commentMapper.toDto(comment, user1);
+        when(itemService.addComment(Mockito.any(CommentDto.class), Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(commentDto);
+
+        mvc.perform(post("/items/{itemId}/comment", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .content(objectMapper.writeValueAsString(commentDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(comment.getId())))
+                .andExpect(jsonPath("$.author", is(comment.getAuthor())))
+                .andExpect(jsonPath("$.item", is(comment.getItem())))
+                .andExpect(jsonPath("$.text", is(comment.getText())));
+
     }
 
 

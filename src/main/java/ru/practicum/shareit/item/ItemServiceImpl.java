@@ -156,7 +156,7 @@ public class ItemServiceImpl implements ItemService {
         for (Booking booking : bookings) {
             log.info("booking >>>>>>>>> = {}", booking);
             if (booking != null && booking.getEnd().isBefore(LocalDateTime.now())
-                    && !comment.getText().equals("")) {
+                    && !"".equals(comment.getText())) {
                 log.info("добавлен отзыв /{}/", comment);
                 commentRepository.save(comment);
                 return commentMapper.toDto(comment, user);
