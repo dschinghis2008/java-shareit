@@ -2,9 +2,12 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -62,10 +65,10 @@ public class ItemServiceImpl implements ItemService {
         if (item.getAvailable() != null) {
             itemUpd.setAvailable(item.getAvailable());
         }
-        if (item.getRequest() != null) {
-            itemUpd.setRequest(item.getRequest());
+        if (item.getRequestId() != null) {
+            itemUpd.setRequestId(item.getRequestId());
         }
-        log.info("обновлена вещь newValue=/{}/", itemUpd.toString());
+        log.info("обновлена вещь newValue=/{}/", itemUpd);
         return itemRepository.save(itemUpd);
     }
 
@@ -76,19 +79,20 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<Item> getByNameOrDesc(String text) {
+    public Collection<Item> getByNameOrDesc(String text, Integer page, Integer size) {
         if (text.equals("")) {
             return new ArrayList<Item>();
         }
-        ArrayList<Item> listSearch = (ArrayList<Item>) itemRepository.findByNameOrDesc(text);
+        List<Item> listSearch =
+                itemRepository.findByNameOrDesc(text, PageRequest.of(page, size)).toList();
         log.info("запрошен поиск по строке /{}/ ,найдено /{}/", text, listSearch.size());
         return listSearch;
     }
 
     @Override
-    public Collection<ItemDtoDate> getAll(Integer userId) {
+    public Collection<ItemDtoDate> getAll(Integer userId, Integer page, Integer size) {
         ArrayList<ItemDtoDate> list = new ArrayList<>();
-        for (Item item : itemRepository.findAllByOwnerOrderById(userId)) {
+        for (Item item : itemRepository.findAllByOwnerOrderById(userId, PageRequest.of(page, size)).toList()) {
             Booking bookingLast = bookingRepository.getLastBooking(item.getId(), LocalDateTime.now());
             Booking bookNext = bookingRepository.getNextBooking(item.getId(), LocalDateTime.now());
             ItemDtoDate itemDtoDate = new ItemDtoDate();
@@ -107,14 +111,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void delete(Integer itemId, Integer userId) {
+        itemRepository.deleteById(itemId);
     }
 
     @Override
     public ItemDtoDate getItemDate(Integer itemId, LocalDateTime dateTime, Integer userId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Booking bookingLast = bookingRepository.getLastBooking(itemId, LocalDateTime.now());
-        Booking bookNext = bookingRepository.getNextBooking(itemId, LocalDateTime.now());
+        Booking bookingLast = bookingRepository.getLastBooking(itemId, dateTime);
+        Booking bookingNext = bookingRepository.getNextBooking(itemId, dateTime);
         Set<Comment> comments = commentRepository.findAllByItem(itemId);
         Set<CommentDto> commentsDto = new HashSet<>();
         for (Comment comment : comments) {
@@ -129,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
         itemDtoDate.setOwner(item.getOwner());
         if (item.getOwner().equals(userId)) {
             itemDtoDate.setLastBooking(bookingLast);
-            itemDtoDate.setNextBooking(bookNext);
+            itemDtoDate.setNextBooking(bookingNext);
         }
         if (comments.size() > 0) {
             itemDtoDate.setComments(commentsDto);
@@ -150,7 +155,8 @@ public class ItemServiceImpl implements ItemService {
                 bookingRepository.getByBookerAndItem(comment.getAuthor(), comment.getItem());
         for (Booking booking : bookings) {
             log.info("booking >>>>>>>>> = {}", booking);
-            if (booking != null && booking.getEnd().isBefore(LocalDateTime.now()) && !comment.getText().equals("")) {
+            if (booking != null && booking.getEnd().isBefore(LocalDateTime.now())
+                    && !"".equals(comment.getText())) {
                 log.info("добавлен отзыв /{}/", comment);
                 commentRepository.save(comment);
                 return commentMapper.toDto(comment, user);

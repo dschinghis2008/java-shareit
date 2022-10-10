@@ -20,6 +20,6 @@ public class ItemDto {
     @NotBlank(message = "owner не может быть пустым")
     private Integer owner;
 
-    private Integer request;
+    private Integer requestId;
 
 }
