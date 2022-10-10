@@ -119,6 +119,11 @@ public class ServiceRequestTest {
         Assertions.assertEquals(collection.size(), 2);
         Assertions.assertEquals(collection.toArray()[0], request1);
         Assertions.assertEquals(collection.toArray()[1], request2);
+    }
+
+    @Test
+    public void saveItemTest() {
+        userService.add(user1);
         Item itemResult = itemRepository.save(item1);
         Assertions.assertEquals(itemResult, item1);
     }

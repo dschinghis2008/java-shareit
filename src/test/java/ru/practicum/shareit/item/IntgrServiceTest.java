@@ -154,7 +154,7 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void getItemByNameOrDescriptionTest() {
+    public void getItemByNameOrDescriptionTest1() {
         Item item2 = new Item();
         item2.setId(2);
         item2.setName("item2");
@@ -166,7 +166,20 @@ public class IntgrServiceTest {
         itemService.add(item2);
         Collection<Item> items = itemService.getByNameOrDesc("item", 0, 10);
         Assertions.assertEquals(items.size(), 2);
-        items = itemService.getByNameOrDesc("DeSc", 0, 10);
+    }
+
+    @Test
+    public void getItemByNameOrDescriptionTest2() {
+        Item item2 = new Item();
+        item2.setId(2);
+        item2.setName("item2");
+        item2.setDescription("Descr Item2");
+        item2.setOwner(1);
+        item2.setAvailable(true);
+        userService.add(user1);
+        itemService.add(item1);
+        itemService.add(item2);
+        Collection<Item> items = itemService.getByNameOrDesc("DeSc", 0, 10);
         Assertions.assertEquals(items.size(), 2);
     }
 

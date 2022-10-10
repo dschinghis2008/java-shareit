@@ -190,7 +190,6 @@ public class ControllerTest {
                 .andExpect(jsonPath("$.[1].id", is(2)))
                 .andExpect(jsonPath("$.[1].name", is("User2")))
                 .andExpect(jsonPath("$.[1].email", is("u2@user.com")));
-
     }
 
     @Test
