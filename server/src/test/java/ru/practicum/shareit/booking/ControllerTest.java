@@ -10,8 +10,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ru.practicum.shareit.ShareItApp;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.StatusDto;
 import ru.practicum.shareit.item.model.Item;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
+@ContextConfiguration(classes = ShareItApp.class)
 public class ControllerTest {
     @Mock
     private BookingService bookingService;
@@ -133,20 +136,6 @@ public class ControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .header("X-Sharer-User-Id", 2))
                 .andExpect(content().json(objectMapper.writeValueAsString(bookingDto1)));
-    }
-
-    @Test
-    public void addBookingWithInvalidDate() throws Exception {
-        booking1.setStart(null);
-
-        mockMvc.perform(post("/bookings")
-                        .content(objectMapper.writeValueAsString(bookingMapper.toDto(booking1, item, user2)))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 2))
-                .andExpect(status().isBadRequest());
-
     }
 
     @Test

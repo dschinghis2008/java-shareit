@@ -10,9 +10,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import ru.practicum.shareit.ShareItApp;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.requests.ItemRequestController;
@@ -35,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ItemRequestController.class)
 @Import(ItemRequestMapper.class)
+@ContextConfiguration(classes = ShareItApp.class)
 public class ControllerRequestTest {
 
     @MockBean
@@ -115,20 +118,6 @@ public class ControllerRequestTest {
                 .andExpect(jsonPath("$.requestor", is(itemRequestDto.getRequestor()), User.class))
                 .andExpect(jsonPath("$.items", is(Matchers.notNullValue())));
 
-    }
-
-    @Test
-    public void addRequestWithInvalidDescriptionTest() throws Exception {
-        itemRequest.setDescription("");
-        when(itemRequestService.add(Mockito.any(ItemRequest.class)))
-                .thenReturn(itemRequest);
-        mockMvc.perform(post("/requests")
-                        .content(objectMapper.writeValueAsString(itemRequestMapper.toDto(itemRequest)))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 2))
-                .andExpect(status().isBadRequest());
     }
 
     @Test

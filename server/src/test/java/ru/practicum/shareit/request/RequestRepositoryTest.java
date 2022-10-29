@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import ru.practicum.shareit.ShareItApp;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.requests.ItemRequestRepository;
@@ -22,6 +24,7 @@ import java.util.Optional;
 @DataJpaTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ContextConfiguration(classes = ShareItApp.class)
 public class RequestRepositoryTest {
 
     private final ItemRequestRepository itemRequestRepository;

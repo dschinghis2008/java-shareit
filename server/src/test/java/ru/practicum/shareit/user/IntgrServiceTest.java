@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.ShareItApp;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -15,6 +17,7 @@ import java.util.Collection;
 @Transactional
 @SpringBootTest(properties = "db.name=test")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@ContextConfiguration(classes = ShareItApp.class)
 public class IntgrServiceTest {
     private final EntityManager entityManager;
     private final UserService userService;

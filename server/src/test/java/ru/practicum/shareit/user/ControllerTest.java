@@ -10,9 +10,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import ru.practicum.shareit.ShareItApp;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 @Import(UserMapper.class)
+@ContextConfiguration(classes = ShareItApp.class)
 public class ControllerTest {
     @MockBean
     private UserService userService;
@@ -76,28 +79,6 @@ public class ControllerTest {
                 .andExpect(jsonPath("$.name", is("User1")))
                 .andExpect(jsonPath("$.email", is("u1@user.com")));
 
-    }
-
-    @Test
-    public void addUserWithInvalidEmailTest() throws Exception {
-        userDto.setEmail("u1.user.com");
-        mvc.perform(post("/users")
-                        .content(objectMapper.writeValueAsString(userDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
-    }
-
-    @Test
-    public void addUserWithInvalidNameTest() throws Exception {
-        userDto.setName("");
-        mvc.perform(post("/users")
-                        .content(objectMapper.writeValueAsString(userDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
     }
 
     @Test

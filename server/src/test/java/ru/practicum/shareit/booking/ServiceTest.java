@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.ShareItApp;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.StatusDto;
 import ru.practicum.shareit.item.ItemService;
@@ -20,6 +22,7 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@ContextConfiguration(classes = ShareItApp.class)
 public class ServiceTest {
 
     private final UserService userService;
