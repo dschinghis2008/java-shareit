@@ -91,11 +91,11 @@ public class IntgrServiceTest {
         itemService.add(item1);
         TypedQuery<Item> query = entityManager.createQuery("select i from Item i where i.name = :name", Item.class);
         Item itemResult = query.setParameter("name", item1.getName()).getSingleResult();
-        Assertions.assertEquals(itemResult.getId(), item1.getId());
-        Assertions.assertEquals(itemResult.getName(), item1.getName());
-        Assertions.assertEquals(itemResult.getDescription(), item1.getDescription());
-        Assertions.assertEquals(itemResult.getAvailable(), item1.getAvailable());
-        Assertions.assertEquals(itemResult.getOwner(), item1.getOwner());
+        Assertions.assertEquals(item1.getId(), itemResult.getId());
+        Assertions.assertEquals(item1.getName(), itemResult.getName());
+        Assertions.assertEquals(item1.getDescription(), itemResult.getDescription());
+        Assertions.assertEquals(item1.getAvailable(), itemResult.getAvailable());
+        Assertions.assertEquals(item1.getOwner(), itemResult.getOwner());
     }
 
     @Test
@@ -123,11 +123,11 @@ public class IntgrServiceTest {
         itemService.update(item, user1.getId());
         TypedQuery<Item> query = entityManager.createQuery("select i from Item i where i.name = :name", Item.class);
         Item itemResult = query.setParameter("name", item.getName()).getSingleResult();
-        Assertions.assertEquals(itemResult.getId(), item.getId());
-        Assertions.assertEquals(itemResult.getName(), item.getName());
-        Assertions.assertEquals(itemResult.getDescription(), item.getDescription());
-        Assertions.assertEquals(itemResult.getAvailable(), item.getAvailable());
-        Assertions.assertEquals(itemResult.getOwner(), item.getOwner());
+        Assertions.assertEquals(item.getId(), itemResult.getId());
+        Assertions.assertEquals(item.getName(), itemResult.getName());
+        Assertions.assertEquals(item.getDescription(), itemResult.getDescription());
+        Assertions.assertEquals(item.getAvailable(), itemResult.getAvailable());
+        Assertions.assertEquals(item.getOwner(), itemResult.getOwner());
     }
 
     @Test
@@ -149,11 +149,11 @@ public class IntgrServiceTest {
         userService.add(user1);
         itemService.add(item1);
         Item itemResult = itemService.getById(item1.getId());
-        Assertions.assertEquals(itemResult.getId(), item1.getId());
-        Assertions.assertEquals(itemResult.getAvailable(), item1.getAvailable());
-        Assertions.assertEquals(itemResult.getName(), item1.getName());
-        Assertions.assertEquals(itemResult.getDescription(), item1.getDescription());
-        Assertions.assertEquals(itemResult.getOwner(), item1.getOwner());
+        Assertions.assertEquals(item1.getId(), itemResult.getId());
+        Assertions.assertEquals(item1.getAvailable(), itemResult.getAvailable());
+        Assertions.assertEquals(item1.getName(), itemResult.getName());
+        Assertions.assertEquals(item1.getDescription(), itemResult.getDescription());
+        Assertions.assertEquals(item1.getOwner(), itemResult.getOwner());
     }
 
     @Test
@@ -168,7 +168,7 @@ public class IntgrServiceTest {
         itemService.add(item1);
         itemService.add(item2);
         Collection<Item> items = itemService.getByNameOrDesc("item", 0, 10);
-        Assertions.assertEquals(items.size(), 2);
+        Assertions.assertEquals(2, items.size());
     }
 
     @Test
@@ -183,7 +183,7 @@ public class IntgrServiceTest {
         itemService.add(item1);
         itemService.add(item2);
         Collection<Item> items = itemService.getByNameOrDesc("DeSc", 0, 10);
-        Assertions.assertEquals(items.size(), 2);
+        Assertions.assertEquals(2, items.size());
     }
 
     @Test
@@ -198,11 +198,11 @@ public class IntgrServiceTest {
         itemService.add(item1);
         itemService.add(item2);
         List<ItemDtoDate> itemDtoDates = (List<ItemDtoDate>) itemService.getAll(1, 0, 10);
-        Assertions.assertEquals(itemDtoDates.size(), 2);
-        Assertions.assertEquals(itemDtoDates.get(0).getId(), item1.getId());
-        Assertions.assertEquals(itemDtoDates.get(1).getId(), item2.getId());
-        Assertions.assertEquals(itemDtoDates.get(0).getAvailable(), item1.getAvailable());
-        Assertions.assertEquals(itemDtoDates.get(1).getAvailable(), item2.getAvailable());
+        Assertions.assertEquals(2, itemDtoDates.size());
+        Assertions.assertEquals(item1.getId(), itemDtoDates.get(0).getId());
+        Assertions.assertEquals(item2.getId(), itemDtoDates.get(1).getId());
+        Assertions.assertEquals(item1.getAvailable(), itemDtoDates.get(0).getAvailable());
+        Assertions.assertEquals(item2.getAvailable(), itemDtoDates.get(1).getAvailable());
 
     }
 
@@ -214,7 +214,7 @@ public class IntgrServiceTest {
         bookingService.add(booking1, 2);
         bookingService.updBookingDate(1, LocalDateTime.now().minusDays(5));
         CommentDto commentDtoResult = itemService.addComment(commentDto, 1, 2);
-        Assertions.assertEquals(commentDtoResult.getId(), 1);
+        Assertions.assertEquals(1, commentDtoResult.getId());
     }
 
     @Test
@@ -229,18 +229,18 @@ public class IntgrServiceTest {
 
         itemService.addComment(commentDto, 1, 2);
         ItemDtoDate itemDtoDate = itemService.getItemDate(1, LocalDateTime.now().minusDays(15), 2);
-        Assertions.assertEquals(itemDtoDate.getId(), 1);
-        Assertions.assertEquals(itemDtoDate.getName(), item1.getName());
-        Assertions.assertEquals(itemDtoDate.getDescription(), item1.getDescription());
-        Assertions.assertEquals(itemDtoDate.getAvailable(), item1.getAvailable());
-        Assertions.assertEquals(itemDtoDate.getOwner(), item1.getOwner());
+        Assertions.assertEquals(1, itemDtoDate.getId());
+        Assertions.assertEquals(item1.getName(), itemDtoDate.getName());
+        Assertions.assertEquals(item1.getDescription(), itemDtoDate.getDescription());
+        Assertions.assertEquals(item1.getAvailable(), itemDtoDate.getAvailable());
+        Assertions.assertEquals(item1.getOwner(), itemDtoDate.getOwner());
     }
 
     @Test
     public void getUserTest() {
         userService.add(user1);
         User userResult = userService.getById(user1.getId());
-        Assertions.assertEquals(userResult, user1);
+        Assertions.assertEquals(user1, userResult);
     }
 
     @Test

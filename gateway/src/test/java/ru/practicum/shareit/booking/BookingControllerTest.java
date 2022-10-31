@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,33 +37,30 @@ public class BookingControllerTest {
     }
 
     @Test
-    public void test1_createBookingWhenBookingIsNotValid() {
+    public void test1_createBookingWhenBookingIsNotValid() throws Exception {
         BookingDto bookingDto = new BookingDto();
         bookingDto.setEnd(LocalDateTime.now().plusDays(2));
         bookingDto.setStart(LocalDateTime.now().minusDays(5));
-        try {
-            mvc.perform(post("/bookings")
-                            .content(mapper.writeValueAsString(bookingDto))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .header("X-Sharer-User-Id", 1))
-                    .andExpect(status().is(400));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mvc.perform(post("/bookings")
+                        .content(mapper.writeValueAsString(bookingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1))
+                .andExpect(status().is(400));
+    }
+
+    @Test
+    public void test2_createBookingWhenBookingIsNotValid() throws Exception {
+        BookingDto bookingDto = new BookingDto();
         bookingDto.setStart(LocalDateTime.now().plusDays(5));
         bookingDto.setEnd(LocalDateTime.now().minusDays(5));
-        try {
-            mvc.perform(post("/bookings")
-                            .content(mapper.writeValueAsString(bookingDto))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .header("X-Sharer-User-Id", 1))
-                    .andExpect(status().is(400));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        mvc.perform(post("/bookings")
+                        .content(mapper.writeValueAsString(bookingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1))
+                .andExpect(status().is(400));
     }
 }

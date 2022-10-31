@@ -90,7 +90,7 @@ public class ServiceTest {
         userService.add(user2);
         itemService.add(item);
         BookingDto bookingDtoResult = bookingService.add(bookingDto1, user2.getId());
-        Assertions.assertEquals(bookingDtoResult, bookingDto1);
+        Assertions.assertEquals(bookingDto1, bookingDtoResult);
     }
 
     @Test
@@ -117,10 +117,10 @@ public class ServiceTest {
         itemService.add(item);
         bookingService.add(bookingDto1, user2.getId());
         BookingDto bookingDtoResult = bookingService.updApprove(booking1.getId(), true, user1.getId());
-        Assertions.assertEquals(bookingDtoResult.getId(), bookingDto1.getId());
-        Assertions.assertEquals(bookingDtoResult.getItem(), bookingDto1.getItem());
-        Assertions.assertEquals(bookingDtoResult.getBooker(), bookingDto1.getBooker());
-        Assertions.assertEquals(bookingDtoResult.getStatus(), Status.APPROVED);
+        Assertions.assertEquals(bookingDto1.getId(), bookingDtoResult.getId());
+        Assertions.assertEquals(bookingDto1.getItem(), bookingDtoResult.getItem());
+        Assertions.assertEquals(bookingDto1.getBooker(), bookingDtoResult.getBooker());
+        Assertions.assertEquals(Status.APPROVED, bookingDtoResult.getStatus());
     }
 
     @Test
@@ -151,7 +151,7 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByUser(user2.getId(), StatusDto.ALL, 0, 10);
-        Assertions.assertEquals(result, List.of(bookingDto2, bookingDto1));
+        Assertions.assertEquals(List.of(bookingDto2, bookingDto1), result);
     }
 
     @Test
@@ -162,7 +162,7 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByUser(user2.getId(), StatusDto.WAITING, 0, 10);
-        Assertions.assertEquals(result, List.of(bookingDto2, bookingDto1));
+        Assertions.assertEquals(List.of(bookingDto2, bookingDto1), result);
     }
 
     @Test
@@ -173,7 +173,7 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByUser(user2.getId(), StatusDto.FUTURE, 0, 10);
-        Assertions.assertEquals(result, List.of(bookingDto2, bookingDto1));
+        Assertions.assertEquals(List.of(bookingDto2, bookingDto1), result);
     }
 
     @Test
@@ -184,7 +184,7 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByUser(user2.getId(), StatusDto.PAST, 0, 10);
-        Assertions.assertEquals(result, List.of());
+        Assertions.assertEquals(List.of(), result);
     }
 
     @Test
@@ -195,7 +195,7 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByUser(user2.getId(), StatusDto.CURRENT, 0, 10);
-        Assertions.assertEquals(result, List.of());
+        Assertions.assertEquals(List.of(), result);
     }
 
     @Test
@@ -206,7 +206,7 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByOwner(user1.getId(), StatusDto.ALL, 0, 10);
-        Assertions.assertEquals(result, List.of(bookingDto2, bookingDto1));
+        Assertions.assertEquals(List.of(bookingDto2, bookingDto1), result);
     }
 
     @Test
@@ -217,7 +217,7 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByOwner(user1.getId(), StatusDto.WAITING, 0, 10);
-        Assertions.assertEquals(result, List.of(bookingDto2, bookingDto1));
+        Assertions.assertEquals(List.of(bookingDto2, bookingDto1), result);
     }
 
     @Test
@@ -228,7 +228,7 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByOwner(user1.getId(), StatusDto.FUTURE, 0, 10);
-        Assertions.assertEquals(result, List.of(bookingDto2, bookingDto1));
+        Assertions.assertEquals(List.of(bookingDto2, bookingDto1), result);
     }
 
     @Test
@@ -239,7 +239,7 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByOwner(user1.getId(), StatusDto.PAST, 0, 10);
-        Assertions.assertEquals(result, List.of());
+        Assertions.assertEquals(List.of(), result);
     }
 
     @Test
@@ -250,6 +250,6 @@ public class ServiceTest {
         bookingService.add(bookingDto1, user2.getId());
         bookingService.add(bookingDto2, user2.getId());
         Collection<BookingDto> result = bookingService.findAllByOwner(user1.getId(), StatusDto.CURRENT, 0, 10);
-        Assertions.assertEquals(result, List.of());
+        Assertions.assertEquals(List.of(), result);
     }
 }

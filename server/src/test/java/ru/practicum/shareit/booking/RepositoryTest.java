@@ -74,7 +74,7 @@ public class RepositoryTest {
                 .createQuery("select b from Booking b join Item i on b.item=i.id where b.id=:booking and " +
                         "(b.bookerId=:user or i.owner=:user)", Booking.class);
         Booking bookingResult = query.setParameter("booking", 1).setParameter("user", 2).getSingleResult();
-        Assertions.assertEquals(bookingResult.getBookerId(), booking1.getBookerId());
+        Assertions.assertEquals(booking1.getBookerId(), bookingResult.getBookerId());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class RepositoryTest {
                 " order by b.start desc", Booking.class);
         List<Booking> bookingResult =
                 query.setParameter("id", 2).setParameter("stat", Status.WAITING).getResultList();
-        Assertions.assertEquals(bookingResult, List.of(booking2, booking1));
+        Assertions.assertEquals(List.of(booking2, booking1), bookingResult);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class RepositoryTest {
         );
         List<Booking> bookingResult =
                 query.setParameter("id", 2).getResultList();
-        Assertions.assertEquals(bookingResult, List.of(booking2, booking1));
+        Assertions.assertEquals(List.of(booking2, booking1), bookingResult);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class RepositoryTest {
         );
         List<Booking> bookingResult =
                 query.setParameter("id", 1).getResultList();
-        Assertions.assertEquals(bookingResult, List.of(booking2, booking1));
+        Assertions.assertEquals(List.of(booking2, booking1), bookingResult);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class RepositoryTest {
         );
         List<Booking> bookingResult =
                 query.setParameter("id", 1).setParameter("status", Status.WAITING).getResultList();
-        Assertions.assertEquals(bookingResult, List.of(booking2, booking1));
+        Assertions.assertEquals(List.of(booking2, booking1), bookingResult);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class RepositoryTest {
         );
         List<Booking> bookingResult =
                 query.setParameter("id", 1).setParameter("date", LocalDateTime.now()).getResultList();
-        Assertions.assertEquals(bookingResult, List.of(booking2, booking1));
+        Assertions.assertEquals(List.of(booking2, booking1), bookingResult);
     }
 
     @Test
@@ -143,7 +143,7 @@ public class RepositoryTest {
         );
         List<Booking> bookingResult =
                 query.setParameter("id", 1).setParameter("date", LocalDateTime.now()).getResultList();
-        Assertions.assertEquals(bookingResult, List.of(booking1, booking2));
+        Assertions.assertEquals(List.of(booking1, booking2), bookingResult);
     }
 
     @Test
@@ -158,7 +158,7 @@ public class RepositoryTest {
         );
         List<Booking> bookingResult =
                 query.setParameter("id", 1).setParameter("date", LocalDateTime.now()).getResultList();
-        Assertions.assertEquals(bookingResult, List.of(booking1, booking2));
+        Assertions.assertEquals(List.of(booking1, booking2), bookingResult);
     }
 
     @Test
@@ -170,7 +170,7 @@ public class RepositoryTest {
                         Booking.class);
         Booking bookingResult =
                 query.setParameter("id", 1).setParameter("date", LocalDateTime.now()).getSingleResult();
-        Assertions.assertEquals(bookingResult.getBookerId(), booking1.getBookerId());
+        Assertions.assertEquals(booking1.getBookerId(), bookingResult.getBookerId());
     }
 
     @Test
@@ -182,7 +182,7 @@ public class RepositoryTest {
                         "and b.end>:date and b.start>:date", Booking.class);
         Booking bookingResult =
                 query.setParameter("id", 1).setParameter("date", LocalDateTime.now()).getSingleResult();
-        Assertions.assertEquals(bookingResult.getBookerId(), booking2.getBookerId());
+        Assertions.assertEquals(booking2.getBookerId(), bookingResult.getBookerId());
     }
 
     @Test
@@ -197,7 +197,7 @@ public class RepositoryTest {
         );
         List<Booking> bookingResult =
                 query.setParameter("id", 2).setParameter("date", LocalDateTime.now()).getResultList();
-        Assertions.assertEquals(bookingResult, List.of(booking1, booking2));
+        Assertions.assertEquals(List.of(booking1, booking2), bookingResult);
     }
 
     @Test
@@ -207,13 +207,13 @@ public class RepositoryTest {
         );
         List<Booking> bookingResult =
                 query.setParameter("booker", 2).setParameter("item", 1).getResultList();
-        Assertions.assertEquals(bookingResult, List.of(booking1, booking2));
+        Assertions.assertEquals(List.of(booking1, booking2), bookingResult);
     }
 
     @Test
     public void getCountOfUserBookingTest() {
 
         int count = bookingRepository.getCountBookingsByUser(2);
-        Assertions.assertEquals(count, 2);
+        Assertions.assertEquals(2, count);
     }
 }

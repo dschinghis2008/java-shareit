@@ -29,12 +29,12 @@ public class ItemDtoMappingTest {
     @Test
     public void toDtoFromItemTest() {
         ItemDto result = itemMapper.toDto(item);
-        Assertions.assertEquals(result, itemDto);
+        Assertions.assertEquals(itemDto, result);
     }
 
     @Test
     public void toItemFromDtoTest() {
         Item result = itemMapper.toItem(itemDto, 1, 1);
-        Assertions.assertEquals(result, item);
+        Assertions.assertEquals(item, result);
     }
 }

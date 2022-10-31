@@ -121,7 +121,7 @@ public class ServiceTest {
                 .when(itemRepository.save(Mockito.any(Item.class)))
                 .thenReturn(item1);
         Item itemResult = itemService.add(item1);
-        Assertions.assertEquals(itemResult, item1);
+        Assertions.assertEquals(item1, itemResult);
     }
 
     @Test
@@ -145,8 +145,8 @@ public class ServiceTest {
         item.setDescription("upd descr");
         item.setOwner(1);
         Item itemResult = itemService.update(item, 1);
-        Assertions.assertEquals(itemResult.getName(), item2.getName());
-        Assertions.assertEquals(itemResult.getDescription(), item2.getDescription());
+        Assertions.assertEquals(item2.getName(), itemResult.getName());
+        Assertions.assertEquals(item2.getDescription(), itemResult.getDescription());
 
     }
 
@@ -156,7 +156,7 @@ public class ServiceTest {
                 .when(itemRepository.findById(Mockito.anyInt()))
                 .thenReturn(Optional.of(item1));
         Item itemResult = itemService.getById(1);
-        Assertions.assertEquals(itemResult, item1);
+        Assertions.assertEquals(item1, itemResult);
     }
 
     @Test
@@ -171,10 +171,10 @@ public class ServiceTest {
         Collection<ItemDtoDate> items = itemService.getAll(1, 0, 10);
         List<ItemDtoDate> itemDtoDateList = (List<ItemDtoDate>) items;
         Assertions.assertEquals(items.size(), 2);
-        Assertions.assertEquals(itemDtoDateList.get(0).getId(), 1);
-        Assertions.assertEquals(itemDtoDateList.get(1).getId(), 2);
-        Assertions.assertEquals(itemDtoDateList.get(0).getName(), item1.getName());
-        Assertions.assertEquals(itemDtoDateList.get(1).getName(), item2.getName());
+        Assertions.assertEquals(1, itemDtoDateList.get(0).getId());
+        Assertions.assertEquals(2, itemDtoDateList.get(1).getId());
+        Assertions.assertEquals(item1.getName(), itemDtoDateList.get(0).getName());
+        Assertions.assertEquals(item2.getName(), itemDtoDateList.get(1).getName());
     }
 
     @Test
@@ -199,12 +199,12 @@ public class ServiceTest {
                 .thenReturn(booking1);
 
         ItemDtoDate itemDtoDate = itemService.getItemDate(1, LocalDateTime.now().withNano(0), 2);
-        Assertions.assertEquals(itemDtoDate.getId(), item1.getId());
-        Assertions.assertEquals(itemDtoDate.getName(), item1.getName());
-        Assertions.assertEquals(itemDtoDate.getDescription(), item1.getDescription());
-        Assertions.assertEquals(itemDtoDate.getAvailable(), item1.getAvailable());
-        Assertions.assertEquals(itemDtoDate.getOwner(), item1.getOwner());
-        Assertions.assertEquals(itemDtoDate.getComments().size(), 1);
+        Assertions.assertEquals(item1.getId(), itemDtoDate.getId());
+        Assertions.assertEquals(item1.getName(), itemDtoDate.getName());
+        Assertions.assertEquals(item1.getDescription(), itemDtoDate.getDescription());
+        Assertions.assertEquals(item1.getAvailable(), itemDtoDate.getAvailable());
+        Assertions.assertEquals(item1.getOwner(), itemDtoDate.getOwner());
+        Assertions.assertEquals(1, itemDtoDate.getComments().size());
     }
 
     @Test
@@ -225,7 +225,7 @@ public class ServiceTest {
                 .when(userRepository.findById(Mockito.anyInt()))
                 .thenReturn(Optional.of(user2));
         CommentDto commentDtoResult = itemService.addComment(commentDto, 1, 2);
-        Assertions.assertEquals(commentDtoResult, commentDto);
+        Assertions.assertEquals(commentDto, commentDtoResult);
     }
 
     @Test
@@ -234,7 +234,7 @@ public class ServiceTest {
                 .when(userRepository.findById(Mockito.anyInt()))
                 .thenReturn(Optional.of(user2));
         User userResult = itemService.getUser(2);
-        Assertions.assertEquals(userResult, user2);
+        Assertions.assertEquals(user2, userResult);
     }
 
     @Test

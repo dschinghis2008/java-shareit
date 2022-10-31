@@ -45,7 +45,7 @@ public class RepositoryTest {
                 .createQuery("select i from Item i where upper(i.name) like upper(concat('%',:str,'%')) or "
                         + "upper(i.description) like upper(concat('%',:str,'%')) ", Item.class);
         Item itemResult = query.setParameter("str", "item").getSingleResult();
-        Assertions.assertEquals(itemResult.getName(), item1.getName());
+        Assertions.assertEquals(item1.getName(), itemResult.getName());
 
     }
 
@@ -63,7 +63,7 @@ public class RepositoryTest {
                 .createQuery("select i from Item i where upper(i.name) like upper(concat('%',:str,'%')) or "
                         + "upper(i.description) like upper(concat('%',:str,'%')) ", Item.class);
         Item itemResult = query.setParameter("str", "Desc ITEM").getSingleResult();
-        Assertions.assertEquals(itemResult.getDescription(), item1.getDescription());
+        Assertions.assertEquals(item1.getDescription(), itemResult.getDescription());
 
     }
 
@@ -80,7 +80,7 @@ public class RepositoryTest {
 
         Pageable pageable = PageRequest.of(0, 10);
         Collection<Item> items = itemRepository.findByNameOrDesc("item", pageable).getContent();
-        Assertions.assertEquals(items.size(), 1);
-        Assertions.assertEquals(items.toArray()[0], item1);
+        Assertions.assertEquals(1, items.size());
+        Assertions.assertEquals(item1, items.toArray()[0]);
     }
 }

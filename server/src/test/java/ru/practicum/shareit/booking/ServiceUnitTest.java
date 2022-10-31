@@ -112,7 +112,7 @@ public class ServiceUnitTest {
                 .when(bookingRepository.save(Mockito.any(Booking.class)))
                 .thenReturn(booking1);
         BookingDto bookingDtoResult = bookingService.add(bookingDto1, user2.getId());
-        Assertions.assertEquals(bookingDtoResult, bookingDto1);
+        Assertions.assertEquals(bookingDto1, bookingDtoResult);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class ServiceUnitTest {
                 .when(bookingRepository.save(Mockito.any(Booking.class)))
                 .thenReturn(booking1);
         BookingDto bookingDtoResult = bookingService.updApprove(bookingDto1.getId(), true, user1.getId());
-        Assertions.assertEquals(bookingDtoResult, bookingDto1);
+        Assertions.assertEquals(bookingDto1, bookingDtoResult);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class ServiceUnitTest {
                 )
                 .thenReturn(bookingDto1);
         BookingDto bookingDtoResult = bookingService.findById(booking1.getId(), user2.getId());
-        Assertions.assertEquals(bookingDtoResult, bookingDto1);
+        Assertions.assertEquals(bookingDto1, bookingDtoResult);
     }
 
     @Test
@@ -183,8 +183,8 @@ public class ServiceUnitTest {
                 .thenReturn(page);
 
         List<BookingDto> listResult = (List<BookingDto>) bookingService.findAllByUser(2, StatusDto.ALL, 0, 10);
-        Assertions.assertEquals(listResult, list);
-        Assertions.assertEquals(listResult.size(), 2);
+        Assertions.assertEquals(list, listResult);
+        Assertions.assertEquals(2, listResult.size());
 
     }
 
@@ -215,7 +215,7 @@ public class ServiceUnitTest {
                         Mockito.any(LocalDateTime.class), Mockito.any(Pageable.class)))
                 .thenReturn(page);
         List<BookingDto> listResult = (List<BookingDto>) bookingService.findAllByUser(2, StatusDto.CURRENT, 0, 10);
-        Assertions.assertEquals(listResult, list);
+        Assertions.assertEquals(list, listResult);
     }
 
     @Test
@@ -245,7 +245,7 @@ public class ServiceUnitTest {
                         Mockito.any(LocalDateTime.class), Mockito.any(Pageable.class)))
                 .thenReturn(page);
         List<BookingDto> listResult = (List<BookingDto>) bookingService.findAllByUser(2, StatusDto.PAST, 0, 10);
-        Assertions.assertEquals(listResult, list);
+        Assertions.assertEquals(list, listResult);
 
     }
 
@@ -276,7 +276,7 @@ public class ServiceUnitTest {
                         Mockito.any(LocalDateTime.class), Mockito.any(Pageable.class)))
                 .thenReturn(page);
         List<BookingDto> listResult = (List<BookingDto>) bookingService.findAllByUser(2, StatusDto.FUTURE, 0, 10);
-        Assertions.assertEquals(listResult, list);
+        Assertions.assertEquals(list, listResult);
 
     }
 
@@ -310,7 +310,7 @@ public class ServiceUnitTest {
                         Mockito.any(Pageable.class)))
                 .thenReturn(page);
         List<BookingDto> listResult = (List<BookingDto>) bookingService.findAllByUser(2, StatusDto.WAITING, 0, 10);
-        Assertions.assertEquals(listResult, list);
+        Assertions.assertEquals(list, listResult);
 
     }
 
@@ -339,7 +339,7 @@ public class ServiceUnitTest {
         List<BookingDto> listResult =
                 (List<BookingDto>) bookingService.findAllByOwner(2, StatusDto.ALL, 0, 10);
         Assertions.assertEquals(listResult, list);
-        Assertions.assertEquals(listResult.size(), 2);
+        Assertions.assertEquals(2, listResult.size());
 
     }
 
@@ -367,7 +367,7 @@ public class ServiceUnitTest {
                         Mockito.any(LocalDateTime.class), Mockito.any(Pageable.class)))
                 .thenReturn(page);
         List<BookingDto> listResult = (List<BookingDto>) bookingService.findAllByOwner(2, StatusDto.CURRENT, 0, 10);
-        Assertions.assertEquals(listResult, list);
+        Assertions.assertEquals(list, listResult);
     }
 
     @Test
@@ -394,7 +394,7 @@ public class ServiceUnitTest {
                         Mockito.any(LocalDateTime.class), Mockito.any(Pageable.class)))
                 .thenReturn(page);
         List<BookingDto> listResult = (List<BookingDto>) bookingService.findAllByOwner(2, StatusDto.PAST, 0, 10);
-        Assertions.assertEquals(listResult, list);
+        Assertions.assertEquals(list, listResult);
 
     }
 
@@ -422,7 +422,7 @@ public class ServiceUnitTest {
                         Mockito.any(LocalDateTime.class), Mockito.any(Pageable.class)))
                 .thenReturn(page);
         List<BookingDto> listResult = (List<BookingDto>) bookingService.findAllByOwner(2, StatusDto.FUTURE, 0, 10);
-        Assertions.assertEquals(listResult, list);
+        Assertions.assertEquals(list, listResult);
 
     }
 
@@ -453,7 +453,7 @@ public class ServiceUnitTest {
                         Mockito.any(Pageable.class)))
                 .thenReturn(page);
         List<BookingDto> listResult = (List<BookingDto>) bookingService.findAllByOwner(2, StatusDto.WAITING, 0, 10);
-        Assertions.assertEquals(listResult, list);
+        Assertions.assertEquals(list, listResult);
 
     }
 

@@ -59,9 +59,9 @@ public class ServiceTest {
         updUser.setName("UpdUser");
         updUser.setEmail("upd@user.com");
         User resultUser = userService.update(updUser, 1);
-        Assertions.assertEquals(resultUser.getId(), 1);
-        Assertions.assertEquals(resultUser.getName(), updUser.getName());
-        Assertions.assertEquals(resultUser.getEmail(), updUser.getEmail());
+        Assertions.assertEquals(1, resultUser.getId());
+        Assertions.assertEquals(updUser.getName(), resultUser.getName());
+        Assertions.assertEquals(updUser.getEmail(), resultUser.getEmail());
     }
 
     @Test
@@ -70,9 +70,9 @@ public class ServiceTest {
                 .when(userRepository.findById(1))
                 .thenReturn(Optional.of(user1));
         User resultUser = userService.getById(1);
-        Assertions.assertEquals(resultUser.getId(), 1);
-        Assertions.assertEquals(resultUser.getName(), user1.getName());
-        Assertions.assertEquals(resultUser.getEmail(), user1.getEmail());
+        Assertions.assertEquals(1, resultUser.getId());
+        Assertions.assertEquals(user1.getName(), resultUser.getName());
+        Assertions.assertEquals(user1.getEmail(), resultUser.getEmail());
     }
 
     @Test
@@ -81,8 +81,8 @@ public class ServiceTest {
                 .when(userRepository.findAll())
                 .thenReturn(List.of(user1, user2));
         Collection<User> usersResult = userService.getAll();
-        Assertions.assertEquals(usersResult.size(), 2);
-        Assertions.assertEquals(usersResult, List.of(user1, user2));
+        Assertions.assertEquals(2, usersResult.size());
+        Assertions.assertEquals(List.of(user1, user2), usersResult);
     }
 
     @Test

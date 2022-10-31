@@ -57,15 +57,15 @@ public class RequestDtoMappingTest {
     @Test
     public void toDtoFromRequestTest() {
         ItemRequestDto result = itemRequestMapper.toDto(request1);
-        Assertions.assertEquals(result, dto);
+        Assertions.assertEquals(dto, result);
     }
 
     @Test
     public void toRequestFromDtoTest() {
         ItemRequest result = itemRequestMapper.toItemRequest(dto, user1.getId());
         Assertions.assertNull(result.getId());
-        Assertions.assertEquals(result.getDescription(), request1.getDescription());
-        Assertions.assertEquals(result.getRequestor().getId(), request1.getRequestor().getId());
+        Assertions.assertEquals(request1.getDescription(), result.getDescription());
+        Assertions.assertEquals(request1.getRequestor().getId(), result.getRequestor().getId());
     }
 
 }

@@ -23,12 +23,12 @@ public class UserDtoMappingTest {
     @Test
     public void toDtoFromUserTest() {
         UserDto result = userMapper.toDto(user);
-        Assertions.assertEquals(result, dto);
+        Assertions.assertEquals(dto, result);
     }
 
     @Test
     public void toUserFromDtoTest() {
         User result = userMapper.toUser(dto);
-        Assertions.assertEquals(result, user);
+        Assertions.assertEquals(user, result);
     }
 }

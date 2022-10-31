@@ -78,7 +78,7 @@ public class ServiceRequestUnitTest {
                 .when(userRepository.findById(Mockito.anyInt()))
                 .thenReturn(Optional.of(user2));
         ItemRequest itemRequestResult = itemRequestService.add(itemRequest);
-        Assertions.assertEquals(itemRequestResult, itemRequest);
+        Assertions.assertEquals(itemRequest, itemRequestResult);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ServiceRequestUnitTest {
                 .when(itemRequestRepository.getRequestsByRequestor(Mockito.anyInt()))
                 .thenReturn(List.of(itemRequest));
         Collection<ItemRequest> list = itemRequestRepository.getRequestsByRequestor(2);
-        Assertions.assertEquals(list.size(), 1);
+        Assertions.assertEquals(1, list.size());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class ServiceRequestUnitTest {
                 .when(itemRequestRepository.findById(Mockito.anyInt()))
                 .thenReturn(Optional.of(itemRequest));
         Optional<ItemRequest> itemRequestResult = (Optional<ItemRequest>) itemRequestRepository.findById(1);
-        Assertions.assertEquals(itemRequestResult, Optional.of(itemRequest));
+        Assertions.assertEquals(Optional.of(itemRequest), itemRequestResult);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ServiceRequestUnitTest {
                 .thenReturn(page);
         Collection<ItemRequest> list1 =
                 itemRequestRepository.getAll(2, PageRequest.of(0, 10)).getContent();
-        Assertions.assertEquals(list1.size(), 1);
+        Assertions.assertEquals(1, list1.size());
     }
 
 }

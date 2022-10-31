@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,27 +35,29 @@ public class UserControllerTest {
     }
 
     @Test
-    public void test1_tryCreateUserWhenUserIsNotValid() {
+    public void test1_tryCreateUserWhenUserIsNotValid() throws Exception {
         UserDto nullEmail = new UserDto();
         nullEmail.setName("Test1");
+
+        mvc.perform(post("/users")
+                        .content(mapper.writeValueAsString(nullEmail))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400));
+    }
+
+    @Test
+    public void test2_tryCreateUserWhenUserIsNotValid() throws Exception {
         UserDto notValidEmail = new UserDto();
         notValidEmail.setName("Test2");
         notValidEmail.setEmail("test.com");
-        try {
-            mvc.perform(post("/users")
-                            .content(mapper.writeValueAsString(nullEmail))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().is(400));
-            mvc.perform(post("/users")
-                            .content(mapper.writeValueAsString(notValidEmail))
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().is(400));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+
+        mvc.perform(post("/users")
+                        .content(mapper.writeValueAsString(notValidEmail))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400));
     }
 }

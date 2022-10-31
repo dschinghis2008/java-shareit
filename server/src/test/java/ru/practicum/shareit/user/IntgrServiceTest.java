@@ -40,9 +40,9 @@ public class IntgrServiceTest {
         userService.add(user1);
         TypedQuery<User> query = entityManager.createQuery("select u from User u where u.name = :name", User.class);
         User userResult = query.setParameter("name", user1.getName()).getSingleResult();
-        Assertions.assertEquals(userResult.getName(), user1.getName());
-        Assertions.assertEquals(userResult.getEmail(), user1.getEmail());
-        Assertions.assertEquals(userResult.getId(), 1);
+        Assertions.assertEquals(user1.getName(), userResult.getName());
+        Assertions.assertEquals(user1.getEmail(), userResult.getEmail());
+        Assertions.assertEquals(1, userResult.getId());
     }
 
     @Test
@@ -53,18 +53,18 @@ public class IntgrServiceTest {
         userService.update(user2, 1);
         TypedQuery<User> query = entityManager.createQuery("select u from User u where u.id = :id", User.class);
         User userResult = query.setParameter("id", 1).getSingleResult();
-        Assertions.assertEquals(userResult.getName(), user2.getName());
-        Assertions.assertEquals(userResult.getEmail(), user2.getEmail());
-        Assertions.assertEquals(userResult.getId(), 1);
+        Assertions.assertEquals(user2.getName(), userResult.getName());
+        Assertions.assertEquals(user2.getEmail(), userResult.getEmail());
+        Assertions.assertEquals(1, userResult.getId());
     }
 
     @Test
     public void getUserByIdTest() {
         userService.add(user1);
         User userResult = userService.getById(1);
-        Assertions.assertEquals(userResult.getId(), 1);
-        Assertions.assertEquals(userResult.getName(), user1.getName());
-        Assertions.assertEquals(userResult.getEmail(), user1.getEmail());
+        Assertions.assertEquals(1, userResult.getId());
+        Assertions.assertEquals(user1.getName(), userResult.getName());
+        Assertions.assertEquals(user1.getEmail(), userResult.getEmail());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class IntgrServiceTest {
         userService.add(user1);
         userService.add(user2);
         Collection<User> users = userService.getAll();
-        Assertions.assertEquals(users.size(), 2);
+        Assertions.assertEquals(2, users.size());
         Assertions.assertTrue(users.contains(user1));
         Assertions.assertTrue(users.contains(user2));
     }
@@ -84,7 +84,7 @@ public class IntgrServiceTest {
         Assertions.assertEquals(users.size(), 1);
         userService.delete(1);
         users = userService.getAll();
-        Assertions.assertEquals(users.size(), 0);
+        Assertions.assertEquals(0, users.size());
     }
 
     @Test
@@ -95,6 +95,6 @@ public class IntgrServiceTest {
         Assertions.assertEquals(users.size(), 2);
         userService.deleteAll();
         users = userService.getAll();
-        Assertions.assertEquals(users.size(), 0);
+        Assertions.assertEquals(0, users.size());
     }
 }

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -19,7 +18,7 @@ public class ItemRequestController {
     private final ItemRequestMapper itemRequestMapper;
 
     @PostMapping
-    public ItemRequestDto add(@Valid @RequestBody ItemRequestDto itemRequestDto,
+    public ItemRequestDto add(@RequestBody ItemRequestDto itemRequestDto,
                               @RequestHeader("X-Sharer-User-Id") Integer requestorId) {
         ItemRequest itemRequest = itemRequestMapper.toItemRequest(itemRequestDto, requestorId);
         return itemRequestMapper.toDto(itemRequestService.add(itemRequest));

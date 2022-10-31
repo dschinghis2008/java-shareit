@@ -82,7 +82,7 @@ public class ServiceRequestTest {
     public void addRequestTest() {
         userService.add(user1);
         ItemRequest itemRequestResult = itemRequestService.add(request1);
-        Assertions.assertEquals(itemRequestResult, request1);
+        Assertions.assertEquals(request1, itemRequestResult);
     }
 
     @Test
@@ -98,9 +98,9 @@ public class ServiceRequestTest {
         itemRequestService.add(request1);
         itemRequestService.add(request2);
         Collection<ItemRequest> collection = itemRequestService.getAllOwn(user1.getId());
-        Assertions.assertEquals(collection.size(), 2);
-        Assertions.assertEquals(collection.toArray()[0], request1);
-        Assertions.assertEquals(collection.toArray()[1], request2);
+        Assertions.assertEquals(2, collection.size());
+        Assertions.assertEquals(request1, collection.toArray()[0]);
+        Assertions.assertEquals(request2, collection.toArray()[1]);
     }
 
     @Test
@@ -108,8 +108,8 @@ public class ServiceRequestTest {
         userService.add(user1);
         itemRequestService.add(request1);
         ItemRequest itemRequestResult = itemRequestService.getById(1, 1);
-        Assertions.assertEquals(itemRequestResult.getId(), 1);
-        Assertions.assertEquals(itemRequestResult, request1);
+        Assertions.assertEquals(1, itemRequestResult.getId());
+        Assertions.assertEquals(request1, itemRequestResult);
     }
 
     @Test
@@ -119,16 +119,16 @@ public class ServiceRequestTest {
         itemRequestService.add(request1);
         itemRequestService.add(request2);
         Collection<ItemRequest> collection = itemRequestService.getAll(2, 0, 10);
-        Assertions.assertEquals(collection.size(), 2);
-        Assertions.assertEquals(collection.toArray()[0], request1);
-        Assertions.assertEquals(collection.toArray()[1], request2);
+        Assertions.assertEquals(2, collection.size());
+        Assertions.assertEquals(request1, collection.toArray()[0]);
+        Assertions.assertEquals(request2, collection.toArray()[1]);
     }
 
     @Test
     public void saveItemTest() {
         userService.add(user1);
         Item itemResult = itemRepository.save(item1);
-        Assertions.assertEquals(itemResult, item1);
+        Assertions.assertEquals(item1, itemResult);
     }
 
 }

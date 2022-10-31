@@ -70,23 +70,23 @@ public class RequestRepositoryTest {
     @Test
     public void addRequestTest() {
         Optional<ItemRequest> itemRequestResult = Optional.of(itemRequestRepository.save(request2));
-        Assertions.assertEquals(itemRequestResult, Optional.of(request2));
+        Assertions.assertEquals(Optional.of(request2), itemRequestResult);
     }
 
     @Test
     public void getAllOwnRequestsTest() {
         Collection<ItemRequest> itemRequests = itemRequestRepository.getRequestsByRequestor(1);
-        Assertions.assertEquals(itemRequests.size(), 2);
-        Assertions.assertEquals(itemRequests.toArray()[0], request1);
-        Assertions.assertEquals(itemRequests.toArray()[1], request2);
+        Assertions.assertEquals(2, itemRequests.size());
+        Assertions.assertEquals(request1, itemRequests.toArray()[0]);
+        Assertions.assertEquals(request2, itemRequests.toArray()[1]);
     }
 
     @Test
     public void getAllRequestsTest() {
         Pageable pageable = PageRequest.of(0, 10);
         Collection<ItemRequest> itemRequests = itemRequestRepository.getAll(2, pageable).getContent();
-        Assertions.assertEquals(itemRequests.size(), 2);
-        Assertions.assertEquals(itemRequests.toArray()[0], request1);
-        Assertions.assertEquals(itemRequests.toArray()[1], request2);
+        Assertions.assertEquals(2, itemRequests.size());
+        Assertions.assertEquals(request1, itemRequests.toArray()[0]);
+        Assertions.assertEquals(request2, itemRequests.toArray()[1]);
     }
 }
