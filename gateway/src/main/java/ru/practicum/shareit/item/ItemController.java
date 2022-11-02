@@ -1,10 +1,12 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.comment.CommentDtoFromRequest;
 import ru.practicum.shareit.item.dto.ItemDto;
 
@@ -22,6 +24,9 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<Object> createItem(@RequestHeader("X-Sharer-User-Id") long userId,
                                              @RequestBody @Valid ItemDto itemDto) {
+        if (itemDto.getName().isEmpty() || itemDto.getAvailable() == null || itemDto.getDescription() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         return itemClient.createItem(itemDto, userId);
     }
 

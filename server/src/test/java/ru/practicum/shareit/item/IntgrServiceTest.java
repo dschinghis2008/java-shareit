@@ -104,13 +104,6 @@ public class IntgrServiceTest {
     }
 
     @Test
-    public void addItemWithInvalidFieldsTest() {
-        userService.add(user1);
-        item1.setAvailable(null);
-        Assertions.assertThrows(ResponseStatusException.class, () -> itemService.add(item1));
-    }
-
-    @Test
     public void updateItemTest() {
         userService.add(user1);
         itemService.add(item1);

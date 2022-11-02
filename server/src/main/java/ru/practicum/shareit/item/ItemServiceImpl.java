@@ -36,9 +36,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item add(Item item) {
-        if (item.getName().isEmpty() || item.getAvailable() == null || item.getDescription() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
         if (userRepository.findById(item.getOwner()).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

@@ -38,18 +38,11 @@ public class BookingServiceImpl implements BookingService {
                 || userRepository.findById(booking.getBookerId()).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        if (booking.getBookerId() == null || booking.getStart() == null || booking.getEnd() == null
-                || booking.getItem() == null
-                || !itemRepository.findById(booking.getItem())
+        if (!itemRepository.findById(booking.getItem())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getAvailable()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        if (booking.getStart().isBefore(LocalDateTime.now())
-                || booking.getEnd().isBefore(LocalDateTime.now())
-                || booking.getEnd().isBefore(booking.getStart())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
         if (itemRepository.findById(booking.getItem()).orElseThrow().getOwner().equals(ownerId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
